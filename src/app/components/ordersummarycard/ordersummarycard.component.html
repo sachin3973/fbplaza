@@ -1,0 +1,13 @@
+<div class="summary-card-container" *ngFor="let record of summaries">
+  <ion-row>    
+    <ion-col>      
+      <ion-row class="ion-justify-content-between ion-align-items-center wid100" style="margin-bottom: 0.3rem;">
+        <ion-label color="dark" class="SmallBold">{{record.description}}</ion-label> 
+        <ion-label color="dark" class="SmallNormal">Count: <b>{{record.quantity}}</b></ion-label>       
+      </ion-row>   
+      <ion-row class="ion-align-items-center wid100" style="margin-top: 0.3rem">
+        <ion-label color="dark" class="SmallNormal"> Amount: <b>{{record.amount | currency: 'INR'}}</b></ion-label>        
+      </ion-row> 
+    </ion-col>
+  </ion-row>
+</div>

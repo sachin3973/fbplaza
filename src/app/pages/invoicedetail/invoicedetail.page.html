@@ -1,0 +1,118 @@
+<ion-content class="invoice-detail-container contentbg">
+  <div class="invoice-detail-header">
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-row>
+        <ion-back-button mode="md" defaultHref="/invoices"></ion-back-button>
+      </ion-row>
+      <ion-row>
+        <div class="invoice-detail-status ion-margin-end">
+          <ion-icon class="dot-icon" name="ellipse"></ion-icon>
+          <ion-label class="SmallNormal">{{invoiceStatus}}</ion-label>
+        </div>
+      </ion-row>
+    </ion-row>
+    <div class="invoice-details-container">
+      <ion-row class="retailer-block ion-margin-bottom ion-padding ion-justify-content-center">
+        <ion-label class="Mediumbold">{{initialgenerator}}</ion-label>
+      </ion-row>
+      <div>
+        <ion-label class="MediumSemibold">{{retailerName}}</ion-label>
+      </div>
+      <div>
+        <ion-label class="MediumSemibold">Retailer</ion-label>
+      </div>
+      <div class="amount-wrapper ion-margin-top">
+        <ion-label class="amount">₹ {{amount}}</ion-label>
+      </div>
+    </div>
+    <ion-col class="ion-margin">
+      <ion-row class="ion-justify-content-between ion-margin-horizontal">
+        <ion-label class="SmallBold">Invoice Number</ion-label>
+        <ion-label class="SmallBold">#{{invoiceNumber}}</ion-label>
+      </ion-row>
+      <ion-row class="ion-justify-content-between ion-margin-horizontal">
+        <ion-label class="SmallBold">Invoice Date</ion-label>
+        <ion-label class="SmallBold">{{invoiceDate}}</ion-label>
+      </ion-row>
+      <ion-row class="ion-justify-content-between ion-margin-horizontal">
+        <ion-label class="SmallBold">Due Date</ion-label>
+        <ion-label class="SmallBold">{{dueDate}}</ion-label>
+      </ion-row>
+    </ion-col>
+     <!-- <ion-row class="ion-justify-content-around ">
+      <div class="contact-retailer-container">
+        <ion-row class="ion-justify-content-around">
+          <img style="height:5.5vh ;" src="../../../assets/Resources/Icons/whatsappicon.png" alt="">
+          <img style="height:5.5vh ;" src="../../../assets/Resources/Icons/callicon.png" alt="">
+        </ion-row>
+      </div>
+    </ion-row> -->
+  </div>
+  <div class="main-content">
+    <div class="address-container ion-padding">
+      <!-- <ion-label color="dark" class="MediumNormal">Address</ion-label> -->
+      <div class="map">
+        <capacitor-google-maps #map></capacitor-google-maps>
+        <div id="show-direction">
+          <ion-icon color="primary" name="navigate-circle"></ion-icon>
+        </div>
+      </div>
+      <ion-row class="address-block ion-align-items-center" (click)="calculateAndDisplayRoute()">
+        <ion-col size="1">
+          <ion-icon style="color: #D2042D; font-size: 1.5rem" name="location"></ion-icon>
+        </ion-col>
+        <ion-col size="11">
+          <ion-label class="VSmallNormal">{{ address }}</ion-label>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+
+  <!-- Request Cancellation Modal -->
+  <ion-modal #cancellationModal class="cancellationmodal " [isOpen]="showmodal" (didDismiss)="showmodal = false"  [initialBreakpoint]="0.55"  handleBehavior="cycle" >
+    <ng-template>
+
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="ion-text-center whitebg">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismiss=true; cancellationModal.dismiss(); closemodal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal">Request Cancellation</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismiss = true; cancellationModal.dismiss(); closemodal();" >
+              <ion-icon slot="icon-only" style="color:var(--ion-darkgrey-color)" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal cancellationmodal-item" style="border-radius:20px !important ;">
+          <ion-label class="MediumNormal ion-margin-start">Enter Reason For Cancellation</ion-label>
+          <div class="wid100">
+            <ion-input autofocus="true" [(ngModel)]="reason" (ionInput)="inputBlur(reason)" class="ion-padding ion-margin reasoninputbox" type="text" placeholder="Enter Reason"></ion-input>                
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="footer-of-modal">
+        <ion-toolbar class="ion-padding-bottom">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button [disabled] = "!reason" (click)="onSendCancellationRequest(); cancellationModal.dismiss(); closemodal();" expand="block" shape="round" class="MediumSemibold texttransform">Send Request</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-template>
+  </ion-modal>
+</ion-content>
+  
+<ion-footer style="border-top: 1px solid #b1b1b1;">
+  <div class="button-block">
+    <!-- <ion-button class="Mediumbold" (click)="openModal()" fill="outline" shape="round">Request Cancellation</ion-button> -->
+    <ion-button class="Mediumbold" (click)="selectPaymentMode()" *ngIf="invoiceStatus === 'New'" color="primary" shape="round">Deliver</ion-button>
+    <ion-button class="Mediumbold" (click)="selectPaymentMode()" *ngIf="invoiceStatus !== 'New'" color="primary" shape="round">Collect</ion-button>
+  </div>
+</ion-footer>

@@ -1,0 +1,337 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+// @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Open Sans&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Open+Sans:ital,wght@0,600;0,800;1,600&family=Open Sans&display=swap');
+
+/*
+24-24px
+16-16px
+14-14px
+
+*/
+
+/* fonts & font sizes */
+
+* {
+  transition: all 0.3s;
+  scroll-behavior: smooth;
+}
+
+.VLargeNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.VLargeSemibold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.VLargeBold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.transaparent-modal {
+  --background: rgba(44, 39, 45, 0.2);
+}
+
+.LargeNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.LargeSemibold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.LargeBold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.MediumNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.MediumSemibold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.Mediumbold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.SmallBold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.SmallSemibold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.SmallNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.VSmallNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.VSmallBold {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.VVSmallNormal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+ion-button::part(native) {
+  border-radius: 0px;
+  // background: linear-gradient(360deg, var(--ion-color-secondary), var(--ion-color-primary));
+  // background:var(--ion-color-primary);
+  --color: white;
+}
+
+.toolbar {
+  // --background: linear-gradient(360deg, var(--ion-color-secondary), var(--ion-color-primary));
+  --background: var(--ion-color-primary);
+  --color: white;
+}
+
+ion-searchbar {
+  .searchbar-input-container {
+    .searchbar-input {
+      // input {
+      font-size: 0.9rem !important;
+      padding-left: 40px;
+      padding-right: 30px;
+    }
+  }
+}
+
+/* custom color classes */
+
+.ion-color-accent1 {
+  --ion-color-base: var(--ion-color-accent1);
+  --ion-color-base-rgb: var(--ion-color-accent1-rgb);
+  --ion-color-contrast: var(--ion-color-accent1-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent1-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent1-shade);
+  --ion-color-tint: var(--ion-color-accent1-tint);
+}
+
+.ion-color-accent2 {
+  --ion-color-base: var(--ion-color-accent2);
+  --ion-color-base-rgb: var(--ion-color-accent2-rgb);
+  --ion-color-contrast: var(--ion-color-accent2-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent2-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent2-shade);
+  --ion-color-tint: var(--ion-color-accent2-tint);
+}
+
+.ion-color-accent3 {
+  --ion-color-base: var(--ion-color-accent3);
+  --ion-color-base-rgb: var(--ion-color-accent3-rgb);
+  --ion-color-contrast: var(--ion-color-accent3-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent3-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent3-shade);
+  --ion-color-tint: var(--ion-color-accent3-tint);
+}
+
+.ion-color-accent4 {
+  --ion-color-base: var(--ion-color-accent4);
+  --ion-color-base-rgb: var(--ion-color-accent4-rgb);
+  --ion-color-contrast: var(--ion-color-accent4-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent4-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent4-shade);
+  --ion-color-tint: var(--ion-color-accent4-tint);
+}
+
+.ion-color-accent5 {
+  --ion-color-base: var(--ion-color-accent5);
+  --ion-color-base-rgb: var(--ion-color-accent5-rgb);
+  --ion-color-contrast: var(--ion-color-accent5-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accent5-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accent5-shade);
+  --ion-color-tint: var(--ion-color-accent5-tint);
+}
+
+.ion-color-accord {
+  --ion-color-base: var(--ion-color-accord);
+  --ion-color-base-rgb: var(--ion-color-accord-rgb);
+  --ion-color-contrast: var(--ion-color-accord-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-accord-contrast-rgb);
+  --ion-color-shade: var(--ion-color-accord-shade);
+  --ion-color-tint: var(--ion-color-accord-tint);
+}
+
+.ion-color-basic {
+  --ion-color-base: var(--ion-color-basic);
+  --ion-color-base-rgb: var(--ion-color-basic-rgb);
+  --ion-color-contrast: var(--ion-color-basic-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-basic-contrast-rgb);
+  --ion-color-shade: var(--ion-color-basic-shade);
+  --ion-color-tint: var(--ion-color-basic-tint);
+}
+
+.ion-color-premium {
+  --ion-color-base: var(--ion-color-premium);
+  --ion-color-base-rgb: var(--ion-color-premium-rgb);
+  --ion-color-contrast: var(--ion-color-premium-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-premium-contrast-rgb);
+  --ion-color-shade: var(--ion-color-premium-shade);
+  --ion-color-tint: var(--ion-color-premium-tint);
+}
+
+.ion-color-tag {
+  --ion-color-base: var(--ion-color-tag);
+  --ion-color-base-rgb: var(--ion-color-tag-rgb);
+  --ion-color-contrast: var(--ion-color-tag-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-tag-contrast-rgb);
+  --ion-color-shade: var(--ion-color-tag-shade);
+  --ion-color-tint: var(--ion-color-tag-tint);
+}
+
+/* custom Toast css */
+.success-toast {
+  --color: var(--ion-color-success);
+  --button-color: var(--ion-color-success);
+  --background: var(--ion-background-color);
+}
+
+.fail-toast {
+  --color: var(--ion-color-danger);
+  --button-color: var(--ion-color-danger);
+  --background: var(--ion-background-color);
+}
+
+.warning-toast {
+  // --color: var(--ion-color-tertiary);
+  // --button-color: var(--ion-color-tertiary);
+  // --background: var(  --ion-background-color);
+
+  --color: var(--ion-background-color);
+  --button-color: var(--ion-background-color);
+  --background: var(--ion-color-tertiary);
+}
+
+/* misc classes */
+
+.texttransform {
+  text-transform: none;
+}
+
+.wid100 {
+  width: 100%;
+}
+
+.height100 {
+  height: 100%;
+}
+
+.flexbetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flexcenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexend {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.custom-ripple {
+  color: #501ace;
+}
+
+.ion-activatable {
+  position: relative;
+  overflow: hidden;
+}
+
+.contentbg {
+  --background: var(--ion-lightestgrey-color) !important;
+}
+.whitebg {
+  --background: #fff !important;
+}
+
+[type="date"] {
+  background: #fff
+    url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)
+    95% 50% no-repeat;
+}
+
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  --webkit-appearance: none;
+}
+
+.pac-container {
+  z-index: 99999999999999999 !important;
+}
+
+.ui-autocomplete {
+  z-index: 99999999999999999 !important;
+}

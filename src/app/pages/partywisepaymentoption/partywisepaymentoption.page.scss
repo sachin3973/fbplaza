@@ -1,0 +1,122 @@
+.inputbox{
+  background-color: #fff;
+  width: auto;
+  color: black;
+  border: 1px solid #6c6c6c;
+  border-radius: 8px;
+  padding: 10px;
+  ion-input{
+    --placeholder-color: #000 !important;
+  }
+}
+.optioncard{
+  height: 60px;
+  background-color:white;
+  margin:16px 16px;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 1px 1px #e6e7f2;
+}
+
+.not-found-image-wrapper > img {
+  height: 5rem;
+}
+
+.outstandingbill-card {
+  background: linear-gradient(360deg, var(--ion-color-secondary), var(--ion-color-primary));
+  padding: 0.7rem 0.5rem; 
+  margin:16px;
+  border-radius: 8px; 
+  box-shadow: 2px 2px 1px 1px #e6e7f2;
+}
+
+.method-selection ion-row{ 
+  padding: 0.6rem 1rem;
+  margin: 0.5rem 0rem;
+  border-radius: 5px;
+  color: black;
+  border: 1px solid var(--ion-lightgrey-color);
+  // box-shadow: 2px 2px 1px 1px #e6e7f2;
+}
+
+.card-container .method-selection ion-row { 
+  padding: 0.6rem 1rem;
+  margin: 0.5rem 0rem;
+  border-radius: 5px;
+}
+
+.method-selection ion-row { 
+  padding: 0.7rem 0.8rem;
+  margin-block: 0.5rem ; 
+  // border: 1px solid grey; border-radius: 8px;
+  width: auto;
+}
+
+.select-icon-wrapper {
+  display: flex;
+  text-align: center;
+  // background: linear-gradient(360deg, var(--ion-color-secondary), var(--ion-color-primary));
+  background: var(--ion-color-primary);
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+}
+
+.select-icon-wrapper ion-icon {
+  align-self: center;
+  margin-left: 4px;
+}
+
+
+.invoice-card-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem 0.5rem; 
+  box-shadow: 2px 2px 1px 1px #e6e7f2;
+}
+
+.invoice-heading {
+  border-bottom: 1px solid var(--ion-text-color);
+  padding-bottom: 0.5rem;
+}
+
+.new-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: var(--ion-lightgrey-color);
+  border-radius: 20px;
+}
+
+.docket-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: var(--ion-color-progress);
+  border-radius: 20px;
+}
+
+.updated-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: var(--ion-lightgrey-color);
+  border-radius: 20px;
+}
+
+.delivered-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #fff2da;
+  border-radius: 20px;
+}
+
+.failed-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #ffded3;
+  border-radius: 20px;
+}
+
+.partially-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #fff2da;
+  border-radius: 20px;
+}
+
+.retailer-name {
+  text-decoration: underline;
+}

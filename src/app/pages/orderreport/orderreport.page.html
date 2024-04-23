@@ -1,0 +1,94 @@
+<ion-header>
+  <app-header title="Order Report"></app-header>
+</ion-header>
+
+<ion-content>
+  <!-- FROM TO DATE Wrapper -->
+  <ion-row class="ion-justify-content-between">
+    <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-text class="SmallNormal labelcolor">From Date</ion-text>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="fromDate" ></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+    <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-text class="SmallNormal labelcolor">To Date</ion-text>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="toDate" ></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <!-- Retailer Input Field -->
+  <ion-row style="margin-inline: 0.55rem;">
+    <ion-col size="12" class="inputbox">
+      <ion-input placeholder="Select Customers" (click)="openRetailerModal()" readonly class="SmallNormal blackfont" style="padding: 5px 8px; height: 2rem;" [(ngModel)]="retailername"></ion-input>
+     <div class="select-icon-wrapper" *ngIf="retailername" (click)="clearRetailer()" style="position: absolute; z-index: 100000; right: 0.3rem; bottom: 0.5rem; padding-right: 0.2rem; padding-bottom: 0.1rem;">
+        <ion-icon size="large" color="light" name="close"></ion-icon>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <!--View Report Button Wrapper -->
+  <ion-row class="ion-align-items-center ion-justify-content-center">
+    <ion-col size="6" class="ion-align-items-center ion-justify-content-center">
+      <ion-button [disabled] ="!toDate || !fromDate" class="SmallNormal" (click)="fetchOrders();" expand="block" color="primary" shape="round">View Report</ion-button>
+    </ion-col>
+  </ion-row> 
+
+  <div class="ion-padding" *ngIf="orderList && orderList.length > 0">
+    <app-recordsummarycard [records]="orderList" [distyconfig]="distyconfig"></app-recordsummarycard>
+  </div>
+
+  <ion-row class="not-found-image-wrapper ion-justify-content-center ion-padding" *ngIf="orderList && orderList.length === 0">
+    <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-col size="12">
+      <ion-row class="ion-justify-content-center"> 
+        <ion-label style="text-align: center">No Record Found</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <!-- Retailer List Modal -->
+  <ion-modal trigger="retailer-name" [isOpen]="showRetailerModal" (didDismiss)="showRetailerModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Customer List </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="cancel()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-row class="ion-align-items-center ion-justify-content-between wid100" >
+          <ion-col size="12" class="ion-no-padding">
+            <ion-searchbar #searchRetname mode="md" class="Mediumbold crudsearchbar" (ionChange)="searchRetailer()" [(ngModel)]="strsearch" ></ion-searchbar>      
+          </ion-col>
+        </ion-row>
+        <ion-item lines="none" *ngFor="let retailer of paginationRetailerList" (click)="confirm(retailer)" class="SmallNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <div>
+            <ion-label color="dark">{{retailer.retailercode}} - {{retailer.businessname}}</ion-label>
+          </div>
+        </ion-item>
+        <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+          <ion-infinite-scroll-content class="SmallNormal"
+            loadingSpinner="circles"
+            loadingText="Loading more Customers...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

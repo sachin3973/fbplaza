@@ -1,0 +1,8 @@
+<ion-content>
+  <div *ngIf="!dataService.globalvars.get('isDocket')">
+    <app-complitionpage [processedInvoice]="dataService.globalvars.get('processedInvoice')"></app-complitionpage>
+  </div>
+  <div *ngIf="dataService.globalvars.get('isDocket')">
+    <app-completiondocket [processedDocket]="dataService.globalvars.get('selectedDocket')"></app-completiondocket>
+  </div>
+</ion-content>

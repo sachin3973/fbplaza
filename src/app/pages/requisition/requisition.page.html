@@ -1,0 +1,905 @@
+<ion-header>
+  <ion-toolbar class="toolbar">
+    <ion-row class="ion-align-items-center ion-padding-vertical">      
+      <ion-icon name="arrow-back-outline" color="light" (click)="goToDashboard()" style="font-size: 1.5rem; margin-left: 0.3rem;"></ion-icon>
+      <ion-label class="toolBarTitle ion-margin-start">Enter Requisition</ion-label>
+    </ion-row>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="contentbg">
+  <!-- Edit Price Modal -->
+  <ion-modal #editpricemodal class="editpricemodal" [isOpen]="showEditPriceModal" (didDismiss)="showEditPriceModal=false" style="--height: 50%; --width: 95%;" handleBehavior="cycle">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-label class="MediumNormal" style="color: white">Update Rate</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissEditPriceModal = true; editpricemodal.dismiss();closeConfrimationForBackModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content scroll-y="false">
+        <div class="ion-padding">
+          <ion-label class="Mediumbold">Update Rate : {{selectedProductForPriceEdit.productname}}</ion-label>
+          <div class="inputbox ion-margin-top">
+            <ion-input [(ngModel)]="newrate" type="number" class="SmallNormal blackfont ion-no-padding" style="padding: 5px;"></ion-input>
+          </div>
+        </div>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="editProductRate();closeEditPriceModal(); canDismissEditPriceModal=true;editpricemodal.dismiss();" shape="round" class="text MediumNormal texttransform" expand="block">Confirm</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Apply Discount Modal -->
+  <ion-modal #applydiscountmodal class="applydiscountmodal" [isOpen]="showApplyDiscountModal" (didDismiss)="showApplyDiscountModal=false" style="--height: 50%; --width: 95%;" handleBehavior="cycle">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-label class="MediumNormal" style="color: white">Add Discount</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissApplyDiscountModal = true; applydiscountmodal.dismiss();closeConfrimationForBackModal()" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content scroll-y="false">
+        <div class="ion-padding">
+          <div class="ion-margin-bottom">
+            <div class="ion-margin-bottom">
+              <ion-label color="dark" class="SmallNormal ">Discount Type</ion-label>
+            </div>
+            <ion-radio-group [(ngModel)]="discountType" mode="md" style="display: flex; align-items: center;">
+              <div style="display: flex; align-items: center;">
+                <ion-radio slot="start" value="percent" class="ion-margin-end"></ion-radio>
+                <ion-label color="dark" class="SmallNormal" class="ion-margin-end">Percentage</ion-label>
+              </div>
+              <div style="display: flex; align-items: center;">
+                <ion-radio slot="start" value="amount" class="ion-margin-end"></ion-radio>
+                <ion-label color="dark" class="SmallNormal" class="ion-margin-end">Amount</ion-label>
+              </div>
+            </ion-radio-group>
+          </div>
+
+          <ion-label  color="primary" class="SmallSemibold">Discount for {{selectedProductForDiscount.productname}}</ion-label>
+          <div class="inputbox" style="margin-top: 5px;">
+            <ion-input [(ngModel)]="discount" type="number" class="SmallNormal blackfont ion-no-padding" style="padding: 5px;"></ion-input>
+          </div>
+        </div>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="applyDiscount();closeApplyDiscountModal(); canDismissApplyDiscountModal=true;applydiscountmodal.dismiss();" shape="round" class="text MediumNormal texttransform" expand="block">Apply</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Order History Modal-->
+  <ion-modal trigger="retailer-name" [isOpen]="showPreviousOrderModal" (didDismiss)="showPreviousOrderModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Order History </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closePreviousOrderModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>    
+        <div class="ion-padding" *ngIf="orderList && orderList.length > 0">
+          <app-recordsummarycard [records]="orderList"></app-recordsummarycard>
+        </div>
+        <ion-row style="height: 100%;" class="ion-align-items-center ion-justify-content-center ion-padding" *ngIf="orderList && orderList.length === 0">
+          <div class="not-found-image-wrapper">
+            <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+            <br>
+            <ion-label style="text-align: center">No Record Found</ion-label>
+          </div>
+        </ion-row>
+      </ion-content>
+      <!-- <ion-footer>
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-button style="width: 50%; height: 3rem;" (click)="closePreviousOrderModal();" shape="round" class="text MediumNormal texttransform" expand="block">Close</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer> -->
+    </ng-template>
+  </ion-modal>
+
+ <!-- Party Ledger Modal-->
+  <ion-modal [isOpen]="showLedgerModal" (didDismiss)="showLedgerModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Party Ledger  </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeLedgerModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-row class="ion-justify-content-between">
+          <ion-col size="6">
+            <ion-row>
+              <ion-col size="12">
+                <ion-text class="SmallNormal labelcolor">From Date</ion-text>
+              </ion-col>
+              <ion-col size="12">
+                <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="fromDate" ></ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6">
+            <ion-row>
+              <ion-col size="12">
+                <ion-text class="SmallNormal labelcolor">To Date</ion-text>
+              </ion-col>
+              <ion-col size="12">
+                <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="toDate" ></ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-align-items-center ion-justify-content-center">
+          <ion-col size="6" class="ion-align-items-center ion-justify-content-center">
+            <ion-button [disabled] ="!toDate || !fromDate" class="SmallNormal" (click)="getLedger();" expand="block" color="primary" shape="round">Show Ledger</ion-button>
+          </ion-col>
+        </ion-row> 
+
+        <div class="flexbetween ion-margin MediumNormal" *ngIf="ledgers && ledgers.length > 0">          
+          <ion-label color="dark">Ledger Report Of <span>{{(selectedRetailer.businessname).toUpperCase()}} </span> </ion-label>          
+          <ion-button color="accent5" expand="block" size="small"> <ion-icon slot="start" name="paper-plane"></ion-icon>Send</ion-button>
+        
+        </div>
+
+        <ion-row *ngIf="ledgers && ledgers.length > 0" class="ion-justify-content-between ion-align-items-center" style="margin-bottom: .3rem; background-color: #d4b7b7; margin-inline: 12px;border-radius: 4px;">
+          <ion-col size="6"><ion-label color="dark" class="flexcenter SmallSemibold">Particulars</ion-label></ion-col>
+          <ion-col size="3"><ion-label color="dark" class="flexcenter SmallSemibold">Amount</ion-label></ion-col>
+          <ion-col size="3"><ion-label color="dark" class="flexcenter SmallSemibold">Balance</ion-label></ion-col>
+        </ion-row>
+
+        <div class="wid100" *ngFor="let record of ledgers">
+
+          <ion-row class="summary-card-ledgertxn ion-justify-content-between ion-align-items-center" style="margin-top: .4rem;">
+            <ion-col size="8"><ion-label class="MediumSemibold">Opening Balance</ion-label></ion-col>
+            <ion-col size="4"><ion-label class="LargeSemibold flexend {{ record.openingbalance === 0 ? 'credit' : 'debit' }}">₹ {{record.openingbalance}}</ion-label></ion-col>
+          </ion-row>
+
+          <ion-row *ngFor="let txn of record.ledgertxns" class="summary-card-ledgertxn ion-justify-content-between ion-align-items-center">
+            <ion-col size="6" class="ion-no-padding">
+              <ion-row>
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-label  class="SmallSemibold">{{txn.txndescline1}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="txn.txndescline2">
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-label  class="VSmallNormal">{{txn.txndate | date : 'dd/MM/yy'}}, {{txn.txndescline2}}</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="3" class="ion-no-padding">
+              <ion-label class="LargeMedium flexend {{ txn.txntype === 'Credit' ? 'credit' : 'debit' }}"> ₹{{txn.txnamount}}</ion-label>            
+            </ion-col>
+            <ion-col size="3" class="ion-no-padding">
+              <ion-label class="LargeMedium flexend {{ txn.balance === 0 ? 'credit' : 'debit' }}"> ₹{{txn.balance}}</ion-label>   
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="summary-card-ledgertxn ion-justify-content-between ion-align-items-center" style="margin-top: 0.2rem;">
+            <ion-col size="8"><ion-label class="MediumSemibold">Closing Balance</ion-label></ion-col>
+            <ion-col size="4"><ion-label class="LargeSemibold flexend {{ record.closingbalance === 0 ? 'credit' : 'debit' }}" >₹ {{record.closingbalance}}</ion-label></ion-col>
+          </ion-row>
+        </div>
+      </ion-content>  
+      
+    </ng-template>
+  </ion-modal>
+
+  <!-- Confirm Order Modal -->
+  <app-confirmrequisitionmodal [frequentOrderProduct]='frequentOrderProduct' [cartSummary]="pipaylib.orderService.curOrder?.cart"  [outOfStockProducts]="outOfStockProducts" [distyconfig]="curconfig" [visible]="confirmationOrderModal" [coords]="coords" (placeOrderEmitter)="receiveConfirmation($event)"></app-confirmrequisitionmodal>
+
+  <!-- Confirmation Modal -->
+  <ion-modal #confirmationmodalforback class="confirmmodal" [isOpen]="showConfirmationModalForBack" (didDismiss)="showConfirmationModalForBack=false" style="--height: 40%; --width: 95%;" handleBehavior="cycle">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismissConfirmationModal = true; confirmationmodalforback.dismiss();closeConfrimationForBackModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white">Confirmation</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissConfirmationModal = true; confirmationmodalforback.dismiss();closeConfrimationForBackModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content scroll-y="false">
+  
+        <div class="ion-margin ion-padding" style="border: 1px solid #ffcc00; background-color: #f4f4ad;">
+          <ion-label class="MediumNormal" color="dark">Product in cart will not be saved! Are you sure you want to leave Requisition Page</ion-label>
+        </div>
+      </ion-content>
+  
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="onConfirmOfGoBack(); canDismissConfirmationModal=true;confirmationmodalforback.dismiss();closeConfrimationForBackModal();" shape="round" class="text MediumNormal texttransform" expand="block">Confirm</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+  
+    </ng-template>
+  </ion-modal>
+
+  <!-- Mark Visit Confirmation -->
+  <ion-modal #markvisitmodal class="confirmmodal" [isOpen]="showMarkVisitModal" (didDismiss)="showMarkVisitModal=false" style="--height: 40%; --width: 95%;" handleBehavior="cycle">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="markvisitmodal.dismiss();closeMarkVisitModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white">Confirmation</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="markvisitmodal.dismiss();closeMarkVisitModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content scroll-y="false">
+  
+        <div class="ion-margin ion-padding ion-text-center" style="border: 1px solid #ffcc00; background-color: #f4f4ad;">
+          <ion-label class="MediumNormal" color="dark">Do you want to mark Idle visit?</ion-label>
+        </div>
+      </ion-content>
+  
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="confirmMarkVist(); markvisitmodal.dismiss();closeMarkVisitModal();" shape="round" class="text MediumNormal texttransform" expand="block">Yes</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+  
+    </ng-template>
+  </ion-modal>
+
+  <div class="ion-margin-horizontal">
+    <ion-row class="ion-align-items-center ion-margin-top ion-justify-content-between">
+        <ion-label style="margin-left: 0.1rem;" color="dark" class="Mediumbold blackfont">Add Customer</ion-label>
+       
+      <div *ngIf="retailername" style="margin-right: -0.1rem">
+        <ion-button (click)="onClickPartyLedger()" size="small" class="texttransform" color="premium">
+          <ion-icon slot="start" name="reader"></ion-icon>
+          Ledger
+        </ion-button>
+        
+        <ion-button (click)="onClickPerviousOrder()" size="small" class="texttransform" color="tag">
+          <ion-icon slot="start" name="cart"></ion-icon>
+          History
+        </ion-button>
+
+        <ion-button (click)="openAddressModal()" size="small" class="texttransform" color="medium">
+          <ion-icon slot="start" name="pin"></ion-icon>
+          {{retailerAddress ? 'Change Address' : 'Add Address'}}
+        </ion-button>
+      </div>
+    </ion-row>
+    
+    <ion-row *ngIf="curconfig?.dynamicaddretailer" class="ion-align-items-center">
+      <ion-col size="10" class="inputbox">
+        <ion-input [disabled]="noselectretailer" (click)="openRetailerModal()" placeholder="Search Customer" readonly class="SmallNormal blackfont ion-no-padding" [(ngModel)]="retailername"></ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-button (click)="openRetailerDetails()" [disabled]="noselectretailer" class="add-retailer-wrapper ion-text-center">
+          <ion-icon color="light" name="bag-add"></ion-icon>
+        </ion-button>
+    </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!curconfig?.dynamicaddretailer" class="ion-align-items-center">
+      <ion-col size="12" class="inputbox">
+        <ion-input (click)="openRetailerModal()" placeholder="Search Customer" readonly class="SmallNormal blackfont ion-no-padding" [(ngModel)]="retailername"></ion-input>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <!-- Send Address Modal -->
+  <ion-modal #address [isOpen]="showAddressModal" (didDismiss)="showAddressModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important;padding: 8px;">
+          <ion-title slot="start" style="padding: 8px;" class="toolBarTitle">Address of {{selectedRetailer.businessname | truncate: 15}}</ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeAddressModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-row>
+          <ion-input autofocus="true" class="ion-margin-top ion-margin-horizontal ion-padding-horizontal reqinputbox MediumNormal blackfont" [(ngModel)]="addressline" type="text" placeholder="Enter Delivery Address"></ion-input>
+        </ion-row>
+
+        <ion-row>
+          <input  [(ngModel)]="landmark" style="display:block ;color: black; background-color: white" class="landmarkBox blackfont" #addressInput ngx-google-places-autocomplete placeholder="Nearest Landmark/Location *" (onAddressChange)="handleAddressChange($event)" />
+        </ion-row>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="saveAddress();" shape="round" class="text MediumNormal texttransform" expand="block">Save</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Offers Modal -->
+  <ion-modal #offersmodal [isOpen]="showOffersModal" (didDismiss)="showOffersModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important;padding: 8px;">
+          <ion-title slot="start" style="padding: 8px;" class="toolBarTitle">Applicable Offers</ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeOffersModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-card *ngIf="selectedRetailer.presetdiscount">
+          <ion-row>
+            <ion-col 
+              size="3" 
+              class="ion-text-center offer preset ion-no-padding ion-no-margin" >      
+              <ion-label class="VVLargeBold">{{selectedRetailer?.presetdiscount + '%'}}</ion-label>
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </ion-col>
+            <ion-col size="9">      
+              <ion-item lines="none" class="ion-no-padding ion-no-margin" style="padding-bottom: 5px;">
+                <ion-label class="ion-text-capitalize ion-no-margin" color="primary">           
+                    <ion-text color="dark" class="SmallBold">Minimum Preset Discount </ion-text>  
+                </ion-label>       
+              </ion-item>
+      
+              <ion-row style="padding-top: 5px;">
+                <ion-col size="12" class="ion-no-padding">
+                  <div class="VSmallNormal flexbetween">             
+                    <span>This offer cannot be combined with other</span> 
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+        <div *ngFor="let coupon of schemes">
+          <ion-card>
+            <ion-row>
+              <ion-col 
+                size="3" 
+                class="ion-text-center discount-offer offer ion-no-padding ion-no-margin" >      
+                <ion-label class="VVLargeBold">{{coupon?.discpercent + '%'}}</ion-label>
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </ion-col>
+      
+              <ion-col size="9">      
+                <ion-item lines="none" class="ion-no-padding ion-no-margin" style="padding-bottom: 5px;">
+                  <ion-label class="ion-text-capitalize ion-no-margin" color="primary">
+                    <span style=" font-family: 'Open Sans', sans-serif; font-size: 14px; font-weight: 600;">{{coupon?.description}}</span>
+                    <p>
+                      <ion-text color="dark" class="VSmallNormal"><span>Applicable On :</span> {{ formatAppliedArray(coupon?.prodappltoname)}}
+                      </ion-text>
+                      <span (click)="presentPopover($event, coupon.prodappltoname)" style="color: var(--ion-color-primary);">{{moreString && ' + '  + moreString}}</span>
+                    </p>
+                  </ion-label>       
+                </ion-item>
+                <ion-row style="padding-top: 5px;">
+                  <ion-col size="12" class="ion-no-padding">
+                    <div class="VSmallNormal flexbetween">             
+                      <span> Min Qty : {{coupon?.minorderqty}}</span>         
+                      <span style="font-weight: bold;"> Valid Till: {{coupon?.todate | date :'dd/MM/yy'}} </span>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </div>
+      
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Outstanding Invoices Modal -->
+  <ion-modal #invoicemodal [isOpen]="showInvoiceModal" (didDismiss)="showInvoiceModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important;padding: 8px;">
+          <ion-title slot="start" style="padding: 8px;" class="toolBarTitle">Outstanding Invoice List </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeInvoiceModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="contentbg">
+        <div *ngFor="let invoice of pendinginvoices">
+          <div class="invoice-card-container ion-margin-horizontal ion-margin-top ion-activatable"  >
+            <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+            <div >
+              <ion-row class="ion-justify-content-between invoice-heading ion-align-items-center">
+                <div>
+                  <ion-label class="SmallNormal" style="color: var(--ion-text-color); margin-right: 3px">Invoice No.:</ion-label>
+                  <ion-label class="VSmallBold" color="dark">#{{invoice.invoicenumber}} </ion-label>
+                </div>
+                <!-- <ion-row *ngIf="invoice.invoicestatus === 'New'" class="new-invoice-status ion-align-items-center">
+                  <ion-icon color="primary" class="invoice-card-dot" name="ellipse"></ion-icon>
+                  <ion-label class="VSmallBold" color="primary">{{invoice.invoicestatus}}</ion-label>
+                </ion-row> -->
+                <ion-row *ngIf="invoice.invoicestatus === 'Invoice updated'" class="updated-invoice-status ion-align-items-center">
+                  <ion-icon class="invoice-status-icon" color="secondary" name="document-text-outline"></ion-icon>
+                  <ion-label  class="VSmallBold" color="secondary">{{invoice.invoicestatus}}</ion-label>
+                </ion-row>
+                <ion-row *ngIf="invoice.invoicestatus === 'Delivered'" class="delivered-invoice-status ion-align-items-center">
+                  <ion-icon class="invoice-status-icon" color="warning" name="cube"></ion-icon>
+                  <ion-label class="VSmallBold" color="warning">{{invoice.invoicestatus}}</ion-label>
+                </ion-row>
+                <ion-row *ngIf="invoice.invoicestatus === 'Payment failed'" class="failed-invoice-status ion-align-items-center" >
+                  <ion-icon class="invoice-status-icon" color="danger" name="alert-circle"></ion-icon>
+                  <ion-label class="VSmallBold" color="danger">Failed</ion-label>
+                </ion-row>
+                <ion-row *ngIf="invoice.invoicestatus === 'Partially paid'" class="partially-invoice-status ion-align-items-center">
+                  <ion-icon class="invoice-status-icon" color="warning" name="checkmark-circle"></ion-icon>
+                  <ion-label class="VSmallBold" color="warning">Partial</ion-label>
+                </ion-row>
+              </ion-row>
+              <ion-row class="ion-justify-content-between ion-align-items-center ">
+                <ion-label style="width: 60%; text-align: left;" color="dark" class="MediumSemibold retailer-name">{{invoice.distyretailername}}</ion-label>
+                <div class="invoice-amount ion-padding-vertical">
+                  <ion-label  color="secondary" class="VLargeSemibold">₹ {{(invoice.invoiceamount + (invoice.failurecharges ? invoice.failurecharges : 0)) - (invoice.paidamount ? invoice.paidamount : 0)}}</ion-label>
+                </div>
+              </ion-row>
+            </div>
+            <ion-row class="ion-align-items-center">
+              <ion-col class="invoice-details SmallNormal">
+                <ion-label style="margin-bottom:5px; color: var(--ion-text-color)">Invoice Date: {{invoice.invoicedate}}</ion-label>
+                <br>
+                <ion-label style="color: var(--ion-text-color)">Due Date: {{invoice.duedate}}</ion-label>
+                <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.invoicestatus === 'Payment failed' && failureCharges > 0" class="failed-invoice-status">
+                  <ion-label color="danger">Failure Charges: ₹ {{invoice.failurecharges}}</ion-label>
+                </div>
+                <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.disc > 0 " class="failed-invoice-status">
+                  <ion-label color="danger">Discount: ₹ {{invoice.disc}}</ion-label>
+                </div>
+              </ion-col>
+              <ion-button (click)="selectPaymentMode(invoice)" *ngIf="staff.collectionallowed" class="invoice-button MediumSemibold texttransform" color="primary">Collect</ion-button>
+            </ion-row>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-row *ngIf="retailername" class="ion-margin-horizontal VSmallNormal">
+    <ion-label style="margin-top: 5px;" color="medium">{{retailerAddress}}</ion-label>
+  </ion-row>
+
+  <ion-row class="ion-margin ion-justify-content-between ion-align-items-center">
+    <ion-col size="9">
+      <!-- <ion-label color="dark" class="SmallSemibold blackfont">Total: {{pipaylib.orderService.curOrder?.cart.billedamount | currency: 'INR'}} Items: {{selectedProducts.length}}</ion-label>
+      <br>
+      <ion-label color="dark" class="SmallSemibold blackfont">Total MRP: {{(pipaylib.orderService.curOrder?.cart.totalmrp? pipaylib.orderService.curOrder?.cart.totalmrp : 0) | currency: 'INR'}}</ion-label> -->
+      <div style="width:95%" >
+        <ion-row class="ion-align-items-center ion-justify-content-start" style="border:1px solid var(--ion-darkgrey-color) ;">
+          <ion-col size="6" class="ion-text-center"><ion-label color="dark" class="VLargeBold">₹ {{pipaylib.orderService.curOrder?.cart.payableamount}}</ion-label></ion-col>
+          <ion-col size="6" style="border-left: 1px solid var(--ion-darkgrey-color);padding-left: 4px;">
+            <ion-row>
+              <ion-col size="12"><ion-label color="dark" class="SmallBold">{{selectedProducts.length}} <span class="VSmallNormal"> Items</span></ion-label> </ion-col>
+            </ion-row>
+            <ion-row style="border-top: 1px solid var(--ion-darkgrey-color);padding-top: 2px;">
+              <ion-col size="12"><ion-label color="dark" class="SmallBold"><span class="VSmallNormal"> MRP : </span> ₹ {{(pipaylib.orderService.curOrder?.cart.totalmrp? pipaylib.orderService.curOrder?.cart.totalmrp : 0)}}</ion-label></ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-col>
+    <ion-col size="3" style="padding:0px 2rem 0px 0px">
+      <ion-row [ngClass]="retailername ? 'product-add-icon-wrapper' : 'product-add-icon-wrapper-disabled'" (click)="openProductModal()" class="ion-align-items-center ion-justify-content-center" style="border-radius: 5px;">
+        <ion-label *ngIf="selectedProducts.length === 0">Add Items</ion-label>
+        <ion-label *ngIf="selectedProducts.length > 0">Edit Items</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="ion-justify-content-center ion-padding ion-margin-top" *ngIf="selectedProducts.length === 0">
+    <img style="height: 6rem;" src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-col size="12">
+      <ion-row class="ion-justify-content-center"> 
+        <ion-label color="primary" class="SmallNormal" style="text-align: center">No Product Added</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <div *ngFor="let product of selectedProducts" class="SmallNormal inputtxt-color">
+    <ion-row style="position: relative; overflow: visible;" class="selectedproduct-wrapper ion-align-items-center">
+      <div style="position: absolute; top: -10px; left:-5px; z-index: 110000;">
+        <ion-badge style="font-size: 1.2rem;" color="premium">{{product.billedquantity}}</ion-badge>
+      </div>
+      <div class="bin-icon" (click)="deleteSelectedProduct(product)" style="position: absolute; top: -10px; right:-5px; z-index: 110000;">
+        <ion-icon name="close-circle" color="danger"></ion-icon>
+      </div>
+      <div style="position: absolute; bottom: 0px; left: 0px; z-index: 110000;">
+        <ion-badge style="font-size: 0.8rem" color="primary">₹ {{product.rateincart ? product.
+          rateincart : 0}}</ion-badge>
+      </div>
+
+      <!-- New UI -->
+      <ion-row class="product-wrapper ion-align-items-between ion-justify-content-between">
+        <ion-col size="6">
+          <img (click)="openPreview()" style="height: 6rem;" src="https://s3.ap-south-1.amazonaws.com/foodkartiposimages/1708347861247.png" alt="">
+        </ion-col>
+        <ion-col class="ion-text-end ion-padding-bottom">
+          <div class="ion-text-capitailize">
+            <ion-label class="MediumNormal" color="dark">{{product.productname}}</ion-label>
+          </div>
+          <div class="inputbox" style="margin-top: 5px;">
+            <ion-input (ionChange)="calculateProductAmount(product)" placeholder="Enter Rate eg.2000" [(ngModel)]="product.primaryunitrate" type="number" class="SmallNormal blackfont ion-no-padding" style="padding: 5px;"></ion-input>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-row>
+  </div>
+
+  <!-- Retailer List Modal -->
+  <ion-modal trigger="retailer-name" [isOpen]="showRetailerModal" (didDismiss)="showRetailerModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Customer List </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="cancel()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="method-selection">
+          <ion-row (click)="showRouteFoRetailerSearchOnClick()" class="ion-justify-content-between ion-align-items-center">
+            <ion-label color="dark">{{selectedRouteForRetailerSearch.name}}</ion-label>
+            <div *ngIf="!showRouteForRetailerSearch" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-down-outline"></ion-icon>
+            </div>
+            <div *ngIf="showRouteForRetailerSearch" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-up-outline"></ion-icon>
+            </div>
+          </ion-row>
+          <ion-row *ngIf="showRouteForRetailerSearch" class="route-option" >
+            <ion-col (click)="onSelectRouteForRetailerSearch(route)" *ngFor="let route of routeList" size="12" class="ion-activatable" style="overflow: hidden; position: relative; border-bottom: 1px solid #d6d6d6">
+              <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+              <ion-label color="dark">{{route.name}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>
+    
+        <ion-row class="ion-align-items-center ion-justify-content-between wid100" >
+          <ion-col size="12" class="ion-no-padding">
+            <ion-searchbar mode="md" class="Mediumbold crudsearchbar" (ionChange)="searchRetailer()" [(ngModel)]="strsearch" ></ion-searchbar>      
+          </ion-col>
+        </ion-row>
+<!--         
+        <div (click)="openRetailerDetails()" *ngIf="curconfig?.readystockretaileradd" style="position: fixed; bottom: 2rem; right: 1.5rem; z-index: 100000000;">
+            <div class="add-retailer-wrapper">
+              <ion-icon color="light" slot="icon-only" name="bag-add"></ion-icon>
+            </div>
+        </div> -->
+        <ion-item lines="none" *ngFor="let retailer of paginationRetailerList" (click)="confirm(retailer)" class="SmallNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <div>
+            <ion-label color="dark">{{retailer.retailercode}} - {{retailer.businessname}}</ion-label>
+          </div>
+        </ion-item>
+
+        <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+          <ion-infinite-scroll-content class="SmallNormal"
+            loadingSpinner="circles"
+            loadingText="Loading more Retailers...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Retailer Detail Modal -->
+  <ion-modal #retailerdetailmodal [isOpen]="showRetailerEntry" (didDismiss)="showRetailerEntry = false" >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start"  class="toolBarTitle ion-no-padding" style="margin-left: 10px !important;">{{captureImage ? 'Capture Shop Image' : 'Retailer Details'}} </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="retailerdetailmodal.dismiss();cancelRetailerDetailModal();" >
+              <ion-icon slot="icon-only" style="color:white" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+
+        <!-- When Capture Image is False -->
+        <div *ngIf="!captureImage" class="ion-padding-horizontal">
+          <ion-row>
+            <ion-input autofocus="true" class="ion-margin-top ion-padding-horizontal reqinputbox MediumNormal" value="AUTO_GENERATED" ></ion-input>
+          </ion-row> 
+
+          <ion-row>
+            <ion-input autofocus="true" class="ion-margin-top ion-padding-horizontal reqinputbox MediumNormal" [(ngModel)]="businessname" type="text" placeholder="Enter Shop Name"></ion-input>
+          </ion-row>
+
+          <ion-row>
+            <ion-input autofocus="true" class="ion-margin-top ion-padding-horizontal reqinputbox MediumNormal" [(ngModel)]="retailername" type="text" placeholder="Enter Contact Person Name"></ion-input>
+          </ion-row>
+
+          <ion-row>
+            <ion-input autofocus="true" class="ion-margin-top ion-padding-horizontal reqinputbox MediumNormal" [(ngModel)]="gstinno" type="text" placeholder="Enter GSTIN No"></ion-input>
+          </ion-row>
+
+          <ion-row>
+            <ion-input autofocus="true" class="ion-margin-top ion-padding-horizontal reqinputbox MediumNormal" [(ngModel)]="mobileno" type="tel" placeholder="Enter Retailer Mobile No"></ion-input>
+          </ion-row>
+
+          <!-- Select Route -->
+          <div class="method-selection ion-margin-top">
+            <ion-row (click)="showRouteOnClick()" class="ion-justify-content-between ion-align-items-center">
+              <ion-label *ngIf="!selectedRoute" color="dark">Select Route</ion-label>
+              <ion-label *ngIf="selectedRoute" color="dark">{{selectedRoute.name}}</ion-label>
+              <div *ngIf="!showRoute" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-down-outline"></ion-icon>
+              </div>
+              <div *ngIf="showRoute" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-up-outline"></ion-icon>
+              </div>
+            </ion-row>
+            <ion-row *ngIf="showRoute" class="route-option" >
+              <ion-col (click)="onSelectRoute(route)" *ngFor="let route of routeList" size="12" class="ion-activatable" style="overflow: hidden; position: relative;">
+                <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+                <ion-label color="dark">{{route.name}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </div>  
+
+          <!-- Select Retailer Type -->
+          <div class="method-selection ion-margin-top">
+            <ion-row (click)="showRetailerTypeOnClick()" class="ion-justify-content-between ion-align-items-center">
+              <ion-label *ngIf="!selectedRetailerType || !selectedRetailerType.name" color="dark">Select Retailer Type</ion-label>
+              <ion-label *ngIf="selectedRetailerType && selectedRetailerType.name" color="dark">{{selectedRetailerType.name}}</ion-label>
+              <div *ngIf="!showRetailerType" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-down-outline"></ion-icon>
+              </div>
+              <div *ngIf="showRetailerType" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-up-outline"></ion-icon>
+              </div>
+            </ion-row>
+            <ion-row *ngIf="showRetailerType" class="route-option" >
+              <ion-col (click)="onSelectRetailerType(retailerType)" *ngFor="let retailerType of retailerTypeList" size="12" class="ion-activatable" style="overflow: hidden; position: relative;">
+                <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+                <ion-label color="dark">{{retailerType.name}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </div>  
+        </div>
+
+        <!-- When Capture Image is True -->
+        <div *ngIf="captureImage" class="ion-padding-horizontal">
+          <ion-row style="padding: 0px 8px;">
+            <ion-col>
+              <ion-row (click)="takePicture()" class="upload-container ion-align-items-center ion-justify-content-center">
+                <img class="icon" *ngIf="!imageurl" src="../../../assets/Resources/Icons/Dslr-Camera-icon.png" alt="">
+                <img class="invoice" *ngIf="imageurl" [src]="imageurl" alt="">
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer" >
+        <ion-row class="ion-justify-content-center">
+          <ion-button *ngIf="!captureImage" style="width: 60%" [disabled]="!mobileno || !retailername || !businessname || mobileno.length !== 10" (click)="verifyMobile();" shape="round" class="text MediumNormal texttransform" expand="block">Next</ion-button>
+
+          <ion-button *ngIf="captureImage" style="width: 60%" [disabled]="!isImageUpload && !enableimagebutton" (click)="confirmAddretailer();" shape="round" class="text MediumNormal texttransform" expand="block">Submit</ion-button>
+        </ion-row>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Product List Modal -->
+  <ion-modal [isOpen]="showProductModal" (didDismiss)="showProductModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Add Products</ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="cancelProduct()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">    
+        <div *ngIf="curconfig.multiwh"  class="method-selection ion-margin-top">
+          <ion-row (click)="showProductGroupOnClick()" class="ion-justify-content-between ion-align-items-center">
+            <ion-label class="SmallNormal" color="dark">{{selectedGroup.name}}</ion-label>
+            <div *ngIf="!showwh" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-down-outline"></ion-icon>
+            </div>
+            <div *ngIf="showwh" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-up-outline"></ion-icon>
+            </div>
+          </ion-row>
+          <ion-row *ngIf="showwh" class="route-option" >
+            <ion-col style="padding: 0px;" (click)="onSelectProductGroup(option)" *ngFor="let option of prodgrpList" size="12" class="ion-activatable" style="overflow: hidden; position: relative;">
+              <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+              <ion-label class="SmallNormal" color="dark">{{option.name}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>    
+        <div class="method-selection ion-margin-top">
+          <ion-row (click)="showProductGroupOnClick()" class="ion-justify-content-between ion-align-items-center">
+            <ion-label class="SmallNormal" color="dark">{{selectedGroup.name}}</ion-label>
+            <div *ngIf="!showProductGroup" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-down-outline"></ion-icon>
+            </div>
+            <div *ngIf="showProductGroup" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-up-outline"></ion-icon>
+            </div>
+          </ion-row>
+          <ion-row *ngIf="showProductGroup" class="route-option" >
+            <ion-col style="padding: 0px;" (click)="onSelectProductGroup(option)" *ngFor="let option of prodgrpList" size="12" class="ion-activatable" style="overflow: hidden; position: relative;">
+              <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+              <ion-label class="SmallNormal" color="dark">{{option.name}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>    
+        <ion-searchbar mode="md" class="Mediumbold crudsearchbar" (ionChange)="searchProduct()" [(ngModel)]="strsearch" ></ion-searchbar>      
+        <div *ngFor="let product of paginationProductList" class="SmallNormal inputtxt-color ion-margin-bottom" style="border: 1px solid var(--ion-border-color); border-radius: 10px;">
+          <ion-row [ngClass]="{'have-stock': convertoFloat(product.lstk) > 0, 'no-stock':  convertoFloat(product.lstk) <= 0}" *ngIf="!curconfig.nostkdisplay" class="ion-justify-content-left" style="color: white; border-top-right-radius: 5px; border-top-left-radius: 5px;">
+            <span *ngIf="checkNum(convertoFloat(product.lstk)) &&  convertoFloat(product.lstk) > 0" style="padding-left: 10px;" class="SmallNormal">
+                Stock: {{"" + product.lstk}} {{product.primaryunit.toUpperCase()}} 
+                <span *ngIf="product.austock">
+                  [{{product.austock}} {{product.alternateunit1}}]
+                </span>
+            </span>
+            <span *ngIf="checkNum(convertoFloat(product.lstk)) && convertoFloat(product.lstk) <= 0" style="padding-left: 10px;" class="SmallNormal">
+              Stock: 0 {{product.primaryunit.toUpperCase()}} 
+          </span>
+          </ion-row>
+          <ion-row class="product-wrapper ion-align-items-between ion-justify-content-between">
+            <ion-col size="6">
+              <img (click)="openPreview()" style="height: 6rem;" src="https://s3.ap-south-1.amazonaws.com/foodkartiposimages/1708347861247.png" alt="">
+            </ion-col>
+            <ion-col class="ion-text-end ion-padding-bottom">
+              <div class="ion-text-capitailize">
+                <ion-label class="MediumNormal" color="dark">{{product.name}}</ion-label>
+              </div>
+              <ion-row class="ion-justify-content-between ion-align-items-end product-cart-wrapper">
+                <ion-row class="ion-align-items-center">
+                  <div style="background-color: var(--ion-color-primary);" (click)="incrementQuantity(product)" class="ion-text-center">
+                    <ion-icon style="color: white" name="add"></ion-icon>
+                  </div>
+                  <div style="border: 1px solid var(--ion-border-color);" class="product-cart-input-box" class="ion-text-center">
+                    <ion-input style="background-color: white; color: black; height: 2.2rem; width: 3rem;" type="number" class="MediumNormal blackfont ion-no-padding" [(ngModel)]="product.qtyincart"></ion-input>
+                  </div>              
+                  <div style="background-color: #800000;" (click)="decrementQuantity(product)" class="ion-text-center">
+                    <ion-icon style="color: white" name="remove"></ion-icon>
+                  </div>
+                </ion-row>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </div>
+
+       <ion-infinite-scroll (ionInfinite)="onIonInfiniteProduct($event)">
+          <ion-infinite-scroll-content class="SmallNormal"
+            loadingSpinner="circles"
+            loadingText="Loading more Produts...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+      </ion-content>
+      <ion-footer>
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-button style="width: 50%; height: 3rem;" (click)="submitProducts();" shape="round" class="text MediumNormal texttransform" expand="block">Submit</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Varient Modal -->
+  <ion-modal [isOpen]="showVarientModal" (didDismiss)="showVarientModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="toolBarTitle">Varient Details</ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="hideVarientModal()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding-top">
+        <div *ngFor="let varient of selectedProductForVarient.varientqty" class="SmallNormal ion-margin-horizontal inputtxt-color ion-margin-bottom" style="border: 1px solid var(--ion-border-color); border-radius: 10px;">
+          <ion-row class="product-wrapper ion-justify-content-between ion-align-items-center">
+            <div class="ion-text-capitailize">
+              <ion-label class="MediumNormal" color="dark">{{selectedProductForVarient.varientname}} - {{varient.varient}}</ion-label>
+            </div>
+            <ion-row class="ion-justify-content-between product-cart-wrapper">
+              <div (click)="decrementVarientQuantity(varient)" class="ion-text-center" style="margin: 0 auto;">
+                <ion-icon style="color: #800000" name="remove-circle"></ion-icon>
+              </div>
+              <div style="border: 1px solid var(--ion-border-color);" class="product-cart-input-box" class="ion-text-center">
+                <ion-input style="background-color: white; color: black; height: 2rem; width: 3rem" type="number" class="MediumNormal blackfont ion-no-padding" [(ngModel)]="varient.quantity"></ion-input>
+              </div>              
+              <div (click)="incrementVarientQuantity(varient)" class="ion-text-center" style="margin: 0 auto;">
+                <ion-icon color="primary" name="add-circle"></ion-icon>
+              </div>
+            </ion-row>
+          </ion-row>
+        </div>
+      </ion-content>
+
+      <ion-footer>
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-button style="width: 50%; height: 3rem;" (click)="submitVarient();" shape="round" class="text MediumNormal texttransform" expand="block">Save</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar style="border: none; --box-shadow: none">
+    <ion-row class="ion-justify-content-center">
+      <ion-button *ngIf="selectedProducts.length > 0" style="width: 60%; height: 3rem" [disabled]="!retailername" (click)="showConfirmationOrder();" shape="round" class="text MediumNormal texttransform" expand="block">Save Requisition</ion-button>
+      <ion-button *ngIf="selectedProducts.length ===  0" style="width: 60%; height: 3rem" [disabled]="!retailername" (click)="openMarkvisitModal();" shape="round" class="text MediumNormal texttransform" expand="block">Mark Visit</ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

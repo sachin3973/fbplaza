@@ -1,0 +1,36 @@
+.itemrow{
+    --padding-start: 0px !important; 
+    // --background: linear-gradient(to left, var(--ion-color-secondary), var(--ion-color-primary));
+    --background:var(--ion-color-primary);
+}
+
+// .header {
+  
+// }
+
+.toolBarTitle {    
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  font-weight: normal;   
+  color: white;
+}
+
+.headercol{
+  font-size: 1.6rem; 
+  cursor: pointer;
+}
+
+.partialpayment-modal-footer {
+  width: 100%;
+  padding: 1rem;
+}
+
+.confirmmodal {
+  --border-radius: 16px;  
+  ion-label{color: #000;}
+}
+
+ion-back-button {
+  display: block;
+  --color: #fff;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "pipaystaffapp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

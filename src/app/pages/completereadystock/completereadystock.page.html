@@ -1,0 +1,164 @@
+<ion-content>
+  <ion-row class="cash-success-container ion-padding" id="content" #content>
+    <ion-col class="ion-justify-content-center wid100">
+      <ion-row class="ion-justify-content-center">
+        <img *ngIf="processedInvoice?.paymentmode !== 'Delivered'" src="../../../assets/Resources/Icons/mdi_check-circle green.png" alt="green checkmark">
+        <img *ngIf="processedInvoice?.paymentmode === 'Delivered'" src="../../../assets/Resources/Icons/mdi_check-circle sucess.png" alt="sucess checkmark">
+      </ion-row>
+      <ion-row class="ion-justify-content-center ion-margin-top">
+        <ion-label *ngIf="processedInvoice?.paymentmode !== 'Delivered'"color="dark" class="LargeNormal">Payment Successful!</ion-label>
+        <ion-label *ngIf="processedInvoice?.paymentmode === 'Delivered'" color="dark" class="LargeNormal">Delivery Completed!</ion-label>
+      </ion-row>
+      <ion-row class="ion-padding-vertical ion-justify-content-between cash-success-inner-container">
+        <ion-label class="MediumNormal">Summary : </ion-label>
+        <ion-label class="MediumNormal">{{ txndate | date : 'dd MMM yyyy  HH:mm a' }}</ion-label>
+      </ion-row>
+      
+      <ion-row *ngIf="processedInvoice?.paymentmode === 'Cash'"  class="cash-success-details-wrapper ion-padding">
+        <ion-col>
+          <ion-row class="ion-justify-content-between ion-margin-vertical" >
+            <ion-label class="MediumNormal">Transaction ID:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.txnid}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Retailer:</ion-label>
+            <ion-label style="width: 60%; text-align: right;" color="dark" class="MediumSemibold">{{processedInvoice?.retailername}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Invoice Number:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.invoicenumber}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Amount Paid:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">₹ {{processedInvoice?.paidamount}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Paid on:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.paidon}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical ">
+            <ion-col size="6" class="ion-text-left ion-float-left ion-no-padding">
+              <ion-label class="MediumNormal">Payment Method:</ion-label>
+            </ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding">
+              <ion-label color="dark" class="MediumSemibold item-text-wrap " style=" word-wrap: break-word;white-space: normal;">{{processedInvoice?.paymentmode}}</ion-label>
+            </ion-col>          
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-col size="6" class="ion-text-left  ion-float-left ion-no-padding"><ion-label class="MediumNormal">Collected by:</ion-label></ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding"><ion-label color="dark" class="MediumSemibold" >{{processedInvoice?.colletedby}}</ion-label></ion-col>
+          </ion-row> 
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="processedInvoice?.paymentmode === 'UPI'"  class="cash-success-details-wrapper ion-padding">
+        <ion-col>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Transaction ID:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.txnid}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Retailer:</ion-label>
+            <ion-label style="width: 60%; text-align: right;" color="dark" class="MediumSemibold">{{processedInvoice?.retailername}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Invoice Number:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.invoicenumber}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Amount Paid:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">₹ {{processedInvoice?.paidamount}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Paid on:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.paidon}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical ">
+            <ion-col size="6" class="ion-text-left ion-float-left ion-no-padding">
+              <ion-label class="MediumNormal">Payment Method:</ion-label>
+            </ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding">
+              <ion-label color="dark" class="MediumSemibold item-text-wrap " style=" word-wrap: break-word;white-space: normal;">{{processedInvoice?.paymentmode}}</ion-label>
+            </ion-col>          
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-col size="6" class="ion-text-left  ion-float-left ion-no-padding"><ion-label class="MediumNormal">Collected by:</ion-label></ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding"><ion-label color="dark" class="MediumSemibold" >{{processedInvoice?.colletedby}}</ion-label></ion-col>
+          </ion-row> 
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="processedInvoice?.paymentmode === 'Cheque'"  class="cash-success-details-wrapper ion-padding">
+        <ion-col>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Transaction ID:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.txnid}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Retailer:</ion-label>
+            <ion-label style="width: 60%; text-align: right;" color="dark" class="MediumSemibold">{{processedInvoice?.retailername}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Invoice Number:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.invoicenumber}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Amount Paid:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">₹ {{processedInvoice?.paidamount}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Cheque Number:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.chequeno }}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Cheque Date:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.chqdate }}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical ">
+            <ion-col size="6" class="ion-text-left  ion-float-left ion-no-padding"> <ion-label class="MediumNormal">Payment Method:</ion-label>  </ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding">
+              <ion-label color="dark" class="MediumSemibold item-text-wrap " style=" word-wrap: break-word;white-space: normal;">{{processedInvoice?.paymentmode}}</ion-label></ion-col>          
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-col size="6" class="ion-text-left  ion-float-left ion-no-padding"><ion-label>Collected by:</ion-label></ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding"><ion-label color="dark" class="MediumSemibold" >{{processedInvoice?.colletedby}}</ion-label></ion-col>
+          </ion-row> 
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="processedInvoice?.paymentmode === 'Delivered'"  class="delivery-success-details-wrapper ion-padding">
+        <ion-col>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Transaction ID:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.txnid}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Retailer:</ion-label>
+            <ion-label style="width: 60%; text-align: right;" color="dark" class="MediumSemibold">{{processedInvoice?.retailername}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Invoice Number:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.invoicenumber}}</ion-label>
+          </ion-row>
+        
+          <ion-row class="ion-justify-content-between ion-margin-vertical">
+            <ion-label class="MediumNormal">Delivered on:</ion-label>
+            <ion-label color="dark" class="MediumSemibold">{{processedInvoice?.paidon}}</ion-label>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-margin-vertical ">
+            <ion-col size="6" class="ion-text-left  ion-float-left ion-no-padding"> <ion-label class="MediumNormal">Payment Method:</ion-label>  </ion-col>
+            <ion-col size="6" class="ion-text-right ion-float-right ion-no-padding"><ion-label color="dark" class="MediumSemibold item-text-wrap " >{{processedInvoice?.paymentmode}}</ion-label></ion-col>  
+          </ion-row>  
+        </ion-col>
+      </ion-row>
+      
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row class="ion-margin ion-justify-content-end ion-align-items-center">
+    <img src="../../../assets/Resources/Icons/whatsapp.png" alt="Whatsapp">
+    <img class="ion-margin-start" src="../../../assets/Resources//Icons/mdi_download.png" alt="">    
+  </ion-row> -->
+  <ion-row style="position: absolute; bottom: 1.2rem;" class="ion-justify-content-center wid100" (click)="goToDashboard()">
+    <ion-label color="primary" class="go-to-invoices MediumSemibold">Go to Dashboard</ion-label>
+  </ion-row>
+</ion-content>

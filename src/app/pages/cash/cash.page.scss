@@ -1,0 +1,35 @@
+.container {
+  background-color: #eeeeee;
+  width: 100%;
+}
+
+.payment-method-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  background-color: white;
+  padding: 2rem 1.6rem;
+  width: 60%;
+  min-width: 330px;
+  box-shadow: 3px 3px 6px #cccccc;
+}
+
+.payment-method-container:hover {
+  border: 1px solid black;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+}
+
+.payment-method-container ion-button {
+  width: 80%;
+  max-width: 250px;
+}
+
+
+

@@ -1,0 +1,66 @@
+.upload-container {
+  background-color: white;
+  width: 100%;
+  min-height: 200px;
+  height: 400px;
+  margin: 1rem auto;
+}
+
+.upload-container .icon {
+  height: 50px;
+}
+
+.upload-container .invoice {
+  height: 100%;
+}
+
+.otp-inner-wrapper {
+  display: flex;
+  flex-direction: column; 
+  color: black;
+  padding: 2.2rem 1.6rem;
+}
+
+.otp-inner-wrapper ion-input {
+  margin: .5rem 0px;
+  background-color: #eaeaea;
+  border-radius: 5px;
+}
+
+.otp-inner-wrapper ion-button{    
+  align-self: center;
+  width: auto;
+}
+
+.otp {   
+  width: 8vh;
+  height: 8vh;
+  border-radius: 5px;
+  background-color: #4AC7FF;
+  color: #000;
+  .native-input {
+    padding: 10px 0px !important;
+  }
+}
+
+ion-modal::part(backdrop) {
+  background: rgb(55, 55, 55);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.7);
+  opacity: 1;
+}
+
+.otp-modal{    
+  --border-radius: 16px;  
+  ion-content{ --overflow: hidden;--background: var(--ion-lightestgrey-color);} 
+  ion-header{padding: 5px;} 
+  ion-label{color: #000;}
+}
+
+.otp-modal-footer {
+  width: 100%;
+  padding: 1rem;
+}
+
+ion-button {
+  height: 3rem;
+}

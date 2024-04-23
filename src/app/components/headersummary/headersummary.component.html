@@ -1,0 +1,31 @@
+<div class="header-summary-wrapper ion-padding-vertical">
+  <ion-row class="ion-align-items-center LargeNormal">
+    <div>
+      <ion-back-button mode="md" defaultHref="/dashboard"></ion-back-button>
+    </div>
+    <ion-label>{{title}}</ion-label>
+  </ion-row>
+</div>
+<div class="header-summary-filter-wrapper">
+  <ion-row class="ion-justify-content-between ion-margin-horizontal">
+    <ion-col size="6" class="from-date-wrapper">
+      <div style="margin-block: 0.5rem;">
+        <ion-label color="dark">From</ion-label>
+      </div>
+      <ion-row class="ion-justify-content-center">
+        <input value="{{fromDate}}" [(ngModel)]="fromDate" type="date">
+      </ion-row>
+    </ion-col>
+    <ion-col size="6" class="to-date-wrapper">
+      <div style="margin-block: 0.5rem;">
+        <ion-label color="dark">To</ion-label>
+      </div>
+      <ion-row class="ion-justify-content-center">
+        <input value="fromDate" [(ngModel)]="toDate" type="date">
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-justify-content-center ion-padding-vertical">
+    <ion-button (click)="onSearch()" shape="round" color="primary" class="MediumNormal">Search</ion-button>
+  </ion-row>
+</div>

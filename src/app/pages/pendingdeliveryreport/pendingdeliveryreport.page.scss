@@ -1,0 +1,81 @@
+.not-found-image-wrapper > img {
+    display: block;
+    margin: auto;   
+    height: 7rem;
+  }
+  
+  .invoice-card-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem 0.5rem; 
+    box-shadow: 2px 2px 1px 1px #e6e7f2;
+  }
+  
+  .invoice-heading {
+    border-bottom: 1px solid var(--ion-text-color);
+    padding-bottom: 0.5rem;
+  }
+  
+  .new-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: var(--ion-lightgrey-color);
+    border-radius: 20px;
+  }
+  
+  .docket-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: var(--ion-color-progress);
+    border-radius: 20px;
+  }
+  
+  .updated-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: var(--ion-lightgrey-color);
+    border-radius: 20px;
+  }
+  
+  .delivered-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: #fff2da;
+    border-radius: 20px;
+  }
+  
+  .failed-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: #ffded3;
+    border-radius: 20px;
+  }
+  
+  .partially-invoice-status {
+    padding: 0.3rem 0.5rem;
+    background-color: #fff2da;
+    border-radius: 20px;
+  }
+  
+  .retailer-name {
+    text-decoration: underline;
+  }
+  
+  .not-found-image-wrapper > img {
+    height: 8rem;
+  }
+  
+  .labelcolor{
+    color: #000;
+  }
+
+  .inputbox{
+    border: 1px solid grey; border-radius: 8px;
+    color: #000;
+  }
+  
+  ion-input{
+    input{
+      padding-left: 10px;
+    }
+  }
+  
+  ion-input[type="date"]{
+    padding-left: 2rem;
+    color: #000000;
+  }

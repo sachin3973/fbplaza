@@ -1,0 +1,23 @@
+<ion-header>
+  <app-header goBackToPaymentMode="true" title="Upload Cheque" ></app-header>
+</ion-header>
+
+<ion-content class="contentbg">
+  <ion-row style="padding: 0px 8px;">
+    <ion-col>
+      <ion-row class="ion-text-center" style="margin: 8px;">
+        <ion-label color="dark" class="MediumNormal">Upload Cheque</ion-label>
+      </ion-row>
+      <ion-row (click)="takePicture()" class="upload-container ion-align-items-center ion-justify-content-center">
+        <img class="icon" *ngIf="!imageurl" src="../../../assets/Resources/Icons/Dslr-Camera-icon.png" alt="">
+        <img class="invoice" *ngIf="imageurl" [src]="imageurl" alt="">
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer class="ion-justify-content-center ion-padding">
+  <ion-toolbar class="ion-padding-horizontal" style="border:0px; --background: white;">
+    <ion-button (click)="processCollection()" [disabled]="!isImageUpload" expand="block" shape="round" class="MediumSemibold texttransform">Upload</ion-button>
+  </ion-toolbar>
+</ion-footer>

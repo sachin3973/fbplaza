@@ -1,0 +1,21 @@
+{
+    "id": "1690365230316",
+    "collectedbystaffname": "Sameer",
+    "retailername": "Ravi Kirana",
+    "invoiceamount": 183,
+    "invoicenumber": "NL43250",
+    "objectversion": 1,
+    "paidamount": 183,
+    "paymentmode": "Cheque",
+    
+    "paymentdate": "2023-09-22",
+    "settlementdate": "2023-07-25",
+    "instrumentref": "100321",  
+    "bankname": "Kotak Mahindra Bank",
+    
+    "remarks": "Payment Done",
+    "retailermobileno": "9137262060",
+    "txnreference": "",
+    "createdat": "2023-07-26 15:23:49",
+    "updatedat": "2023-07-26 15:23:49"
+   }

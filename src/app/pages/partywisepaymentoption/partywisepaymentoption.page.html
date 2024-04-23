@@ -1,0 +1,265 @@
+<ion-header>
+  <app-header title="Select Payment Option"></app-header>
+</ion-header>
+
+<ion-content class="contentbg">
+  <div class="ion-margin ion-padding-top">
+    <ion-label color="dark" class="MediumSemibold blackfont">Search Retailer</ion-label>
+    <div class="inputbox">
+      <ion-input placeholder="Click To Search Retailer" (click)="openRetailerModal()" readonly class="SmallNormal blackfont ion-no-padding" [(ngModel)]="retailername"></ion-input>    
+    </div> 
+  </div>
+
+  <!-- Total Outstanding Card -->
+  <div *ngIf="retailername && invoicesAgainstRetailer && invoicesAgainstRetailer.length > 0" class="outstandingbill-card">
+    <ion-row style="color: white;" class="ion-justify-content-around ion-align-items-center" >
+      <div>
+        <ion-label class="SmallNormal">Outstanding Bills</ion-label>
+      </div>
+      <div>
+        <ion-label class="SmallNormal">Outstanding Amount</ion-label>
+      </div>
+    </ion-row>
+    <ion-row style="color: white;" class="ion-justify-content-around ion-align-items-center">
+      <div>
+        <ion-label class="Mediumbold"> {{invoicesAgainstRetailer.length}}</ion-label>
+      </div>
+      <div>
+        <ion-label class="Mediumbold">{{settlementAmount | currency: 'INR'}}</ion-label>
+      </div>
+    </ion-row>
+  </div>
+
+  <ion-row class="not-found-image-wrapper ion-justify-content-center ion-padding" *ngIf="invoicesAgainstRetailer && invoicesAgainstRetailer.length === 0" style="margin-top: 2rem;">
+    <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-col size="12">
+      <ion-row class="ion-justify-content-center"> 
+        <ion-label class="MediumNormal" color="primary" style="text-align: center">No Outstanding Bill</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <!-- Retailer List Modal -->
+  <ion-modal trigger="retailer-name" [isOpen]="showRetailerModal" (didDismiss)="showRetailerModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important; padding: 8px;">
+          <ion-title slot="start" style="padding: 8px;"  class="toolBarTitle LargeSemibold">Retailer List </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeRetailerDialog()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="method-selection">
+          <ion-row (click)="showRouteFoRetailerSearchOnClick()" class="ion-justify-content-between ion-align-items-center">
+            <ion-label color="dark">{{selectedRouteForRetailerSearch.name}}</ion-label>
+            <div *ngIf="!showRouteForRetailerSearch" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-down-outline"></ion-icon>
+            </div>
+            <div *ngIf="showRouteForRetailerSearch" class="select-icon-wrapper align-items-center">
+              <ion-icon name="caret-up-outline"></ion-icon>
+            </div>
+          </ion-row>
+          <ion-row *ngIf="showRouteForRetailerSearch" class="route-option" >
+            <ion-col (click)="onSelectRouteForRetailerSearch(route)" *ngFor="let route of routeList" size="12" class="ion-activatable" style="overflow: hidden; position: relative; border-bottom: 1px solid #d6d6d6">
+              <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+              <ion-label color="dark">{{route.name}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>
+        <ion-row class="ion-align-items-center ion-justify-content-between wid100" >
+          <ion-col size="12" class="ion-no-padding">
+            <ion-searchbar mode="md" class="Mediumbold crudsearchbar" (ionChange)="searchRetailer()" [(ngModel)]="strsearch" ></ion-searchbar>      
+          </ion-col>
+        </ion-row>
+              
+        <ion-item lines="none" *ngFor="let retailer of paginationRetailerList" (click)="confirmRetailer(retailer)" class="SmallNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <div>
+            <ion-label color="dark">{{retailer.retailercode}} - {{retailer.businessname}}</ion-label>
+          </div>
+        </ion-item>
+
+        <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+          <ion-infinite-scroll-content class="SmallNormal"
+            loadingSpinner="circles"
+            loadingText="Loading more Retailers...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Select Settlement Options -->
+  <ion-radio-group *ngIf="(invoicesAgainstRetailer && invoicesAgainstRetailer.length > 1) && retailername" (ionChange)="onChangePaymentOption($event)" [(ngModel)]="paymentoption" mode="md">
+      <div class="flexbetween optioncard" >        
+       <div class="flexbetween">
+        <img style="height: 40px;width: 40px;" src="../../../assets/Resources/partywise/all-inclusive.png" alt="">
+        <ion-label color="dark" class="MediumNormal ion-margin-start">Full Payment</ion-label>
+       </div>    
+        <ion-radio slot="end" value="full"></ion-radio>
+      </div>
+      <div class="flexbetween optioncard">        
+        <div class="flexbetween">
+          <img style="height: 40px;width: 40px;" src="../../../assets/Resources/partywise/documents.png" alt="">
+          <ion-label color="dark" class="MediumNormal ion-margin-start">On Account Payment</ion-label>
+         </div> 
+        <ion-radio slot="end" value="onaccount"></ion-radio>
+      </div>
+      <div *ngIf="paymentoption ==='onaccount'" class="inputbox ion-margin-horizontal">
+        <ion-input class="SmallNormal blackfont" [(ngModel)]="amount" placeholder="Enter Amount" type="number"></ion-input>
+      </div>
+      <div (click)="openInvoiceListDialog();" class="flexbetween optioncard">        
+        <div class="flexbetween">
+          <img style="height: 40px;width: 40px;" src="../../../assets/Resources/partywise/completed.png" alt="">
+          <ion-label color="dark" class="MediumNormal ion-margin-start">Selected Invoice payment</ion-label>
+         </div> 
+        <ion-radio slot="end" value="invoice"></ion-radio>
+      </div>
+  </ion-radio-group> 
+
+  <!-- For One Outstanding Invoice -->
+  <div *ngIf="(invoicesAgainstRetailer && invoicesAgainstRetailer.length === 1) && retailername">
+    <div *ngFor="let invoice of invoicesAgainstRetailer">
+      <div class="invoice-card-container ion-margin-horizontal ion-margin-top ion-activatable"  >
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div >
+          <ion-row class="ion-justify-content-between invoice-heading ion-align-items-center">
+            <div>
+              <ion-label class="SmallNormal" style="color: var(--ion-text-color); margin-right: 3px">Invoice No.:</ion-label>
+              <ion-label class="VSmallBold" color="dark">#{{invoice.invoicenumber}} </ion-label>
+            </div>
+            <ion-row *ngIf="invoice.invoicestatus === 'New'" class="new-invoice-status ion-align-items-center">
+              <ion-icon color="primary" class="invoice-card-dot" name="ellipse"></ion-icon>
+              <ion-label class="VSmallBold" color="primary">{{invoice.invoicestatus}}</ion-label>
+            </ion-row>
+            <ion-row *ngIf="invoice.invoicestatus === 'Invoice updated'" class="updated-invoice-status ion-align-items-center">
+              <ion-icon class="invoice-status-icon" color="secondary" name="document-text-outline"></ion-icon>
+              <ion-label  class="VSmallBold" color="secondary">{{invoice.invoicestatus}}</ion-label>
+            </ion-row>
+            <ion-row *ngIf="invoice.invoicestatus === 'Delivered'" class="delivered-invoice-status ion-align-items-center">
+              <ion-icon class="invoice-status-icon" color="warning" name="cube"></ion-icon>
+              <ion-label class="VSmallBold" color="warning">{{invoice.invoicestatus}}</ion-label>
+            </ion-row>
+            <ion-row *ngIf="invoice.invoicestatus === 'Payment failed'" class="failed-invoice-status ion-align-items-center" >
+              <ion-icon class="invoice-status-icon" color="danger" name="alert-circle"></ion-icon>
+              <ion-label class="VSmallBold" color="danger">Failed</ion-label>
+            </ion-row>
+            <ion-row *ngIf="invoice.invoicestatus === 'Partially paid'" class="partially-invoice-status ion-align-items-center">
+              <ion-icon class="invoice-status-icon" color="warning" name="checkmark-circle"></ion-icon>
+              <ion-label class="VSmallBold" color="warning">Partial</ion-label>
+            </ion-row>
+          </ion-row>
+          <ion-row class="ion-justify-content-between ion-align-items-center ">
+            <ion-label style="width: 60%; text-align: left;" color="dark" class="MediumSemibold retailer-name">{{invoice.distyretailername}}</ion-label>
+            <div class="invoice-amount ion-padding-vertical">
+              <ion-label  color="secondary" class="VLargeSemibold">₹ {{(invoice.invoiceamount + (invoice.failurecharges ? invoice.failurecharges : 0)) - (invoice.paidamount ? invoice.paidamount : 0)}}</ion-label>
+            </div>
+          </ion-row>
+        </div>
+        <ion-row class="ion-align-items-center">
+          <ion-col  class="invoice-details SmallNormal">
+            <ion-row>
+              <ion-label style="margin-bottom:5px; color: var(--ion-text-color)">Invoice Date: {{invoice.invoicedate}}</ion-label>
+              <ion-label style="color: var(--ion-text-color)">Due Date: {{invoice.duedate}}</ion-label>
+            </ion-row>
+            <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.invoicestatus === 'Payment failed' && failureCharges > 0" class="failed-invoice-status">
+              <ion-label color="danger">Failure Charges: ₹ {{invoice.failurecharges}}</ion-label>
+            </div>
+            <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.disc > 0 " class="failed-invoice-status">
+              <ion-label color="danger">Discount: ₹ {{invoice.disc}}</ion-label>
+            </div>
+          </ion-col>
+          <ion-button (click)="selectPaymentMode(invoice)" class="invoice-button MediumSemibold texttransform" color="primary">Collect</ion-button>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+  <!-- Select Invoice Dialog -->
+  <ion-modal trigger="retailer-name" [isOpen]="showInvoiceListModal" (didDismiss)="showInvoiceListModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important;padding: 8px;">
+          <ion-title slot="start" style="padding: 8px;" class="toolBarTitle LargeSemibold">Invoice List </ion-title>
+          <ion-buttons slot="end"> 
+            <ion-button (click)="closeInvoiceListDialog()"> 
+              <ion-icon slot="icon-only" name="close"></ion-icon> 
+            </ion-button> 
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content class="ion-padding">
+        <div class="outstandingbill-card" style="margin-top: -0.7rem;">
+          <div style="color: white; text-align: center;">
+            <div>
+              <ion-label class="SmallNormal">{{retailername}}</ion-label>
+            </div>
+            <div>
+              <ion-label class="Mediumbold">{{settlementAmount | currency: 'INR'}}</ion-label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="invoicesAgainstRetailer && invoicesAgainstRetailer.length > 0">
+          <div *ngFor="let invoice of invoicesAgainstRetailer">
+            <app-partywiseinvoicecard (selectedInvoicesEmitter)="receiveSelectedInvoices($event)" [invoice]="invoice"></app-partywiseinvoicecard>
+          </div>
+        </div>
+
+        <ion-row class="not-found-image-wrapper ion-justify-content-center ion-padding" *ngIf="invoicesAgainstRetailer && invoicesAgainstRetailer.length === 0" style="margin-top: 2rem;">
+          <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+          <ion-col size="12">
+            <ion-row class="ion-justify-content-center"> 
+              <ion-label class="MediumNormal" color="primary" style="text-align: center">No Invoices Found</ion-label>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-content>
+
+      <ion-footer>
+        <ion-toolbar class="ion-padding-horizontal" style="border:0px; --box-shadow: none">
+          <!-- <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="6">
+              <ion-label style="text-align: right" color="primary" class="Mediumbold">Count :({{selectedInvoicesToSettle.length}})</ion-label>
+            </ion-col>
+            <ion-col size="6">
+              <ion-label style="text-align: right" color="primary" class="Mediumbold">Amount:{{selectedInvoiceAmount | currency: 'INR'}}</ion-label>
+            </ion-col>
+          </ion-row> -->
+          <ion-row class="ion-justify-content-between ion-align-items-center">           
+            <ion-col size="5">
+              <ion-label style="text-align: right" color="primary" class="Mediumbold">({{selectedInvoicesToSettle.length}}) - {{selectedInvoiceAmount | currency: 'INR'}} </ion-label>
+            </ion-col>
+            <ion-col size="7">
+              <ion-button 
+                (click)="selectedInvoicesToSettle.length > 1 ? onSubmitSelectedInvoices() : selectedInvoicesToSettle.length === 1 ? selectPaymentMode(selectedInvoicesToSettle[0]) : null" 
+                [disabled]="selectedInvoicesToSettle.length === 0"
+                expand="block" 
+                shape="round" 
+                class="MediumSemibold texttransform">
+                Proceed
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+      
+    </ng-template>
+  </ion-modal>
+
+  <!-- Payment Mode Modal Component -->
+  <app-partywisepaymentmodes [selectedInvoices]="paymentoption === 'onaccount' ? null : paymentoption === 'full' ? invoicesAgainstRetailer : selectedInvoicesToSettle" [calculationType]="paymentoption" [selectedRetailer]="selectedRetailer" [distyconfig]="distyconfig" (closePaymentModeModalEmiter)="receiveOnCloseModal($event)" [retailerName]="retailername" [openModal]="showPaymentModes" [settlementAmount]="selectedInvoiceAmount ? selectedInvoiceAmount : settlementAmount"></app-partywisepaymentmodes>
+</ion-content>
+
+
+<!-- PROCEED FOOTER -->
+<ion-footer>
+  <ion-toolbar class="ion-padding-horizontal" style="border:0px; --box-shadow: none">
+    <ion-button (click)="openPaymentModal()" [disabled]="!retailername || !paymentoption || (retailername && paymentoption === 'onaccount' && amount === 0 || retailername && paymentoption === 'onaccount' && !amount || paymentoption === 'invoice' && selectedInvoicesToSettle.length === 0 || invoicesAgainstRetailer && invoicesAgainstRetailer.length === 0)" expand="block" shape="round" class="MediumSemibold texttransform">Proceed</ion-button>
+  </ion-toolbar>
+</ion-footer>

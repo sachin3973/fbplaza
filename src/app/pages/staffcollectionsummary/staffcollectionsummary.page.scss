@@ -1,0 +1,87 @@
+.inputbox{
+  border: 1px solid grey; border-radius: 8px;
+  color: #000;
+}
+
+ion-input{
+  input{
+    padding-left: 10px;
+  }
+}
+
+ion-input[type="date"]{
+  padding-left: 2rem;
+  color: #000000;
+}
+
+.labelcolor{
+  color: #000;
+}
+
+
+.select-icon-wrapper {
+  display: flex;
+  text-align: center;
+  background: linear-gradient(360deg, var(--ion-color-secondary), var(--ion-color-primary));
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.select-icon-wrapper ion-icon {
+  align-self: center;
+  margin-left: 4px;
+}
+
+.reason-option{
+  height: auto;
+  overflow-y: scroll;
+  background-color:#fff; 
+  ion-col{
+    border-bottom: 1px solid var(--ion-lightgrey-color);
+  }
+}
+
+.method-selection ion-row{ 
+  padding: 0.7rem 0.8rem;
+  margin: 0.5rem .6rem; 
+  border: 1px solid grey; border-radius: 8px;
+  width: auto;
+}
+
+
+.route-option{
+  height: auto;
+  overflow-y: scroll;
+  background-color: white;  
+}
+
+.customselect{
+  border: 1px solid grey; border-radius: 8px; 
+  color: #000;
+  --placeholder-color: rgb(22, 18, 18);  
+}
+
+.reportcard{
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-radius: 8px;
+}
+
+.paddingbtm10{
+  padding-bottom: 10px;
+}
+
+
+.not-found-image-wrapper > img {
+  height: 5rem;
+}
+
+.summary-card-container{
+  background-color: #fff;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  // box-shadow: 2px 2px 1px 1px #e6e7f2;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+} 

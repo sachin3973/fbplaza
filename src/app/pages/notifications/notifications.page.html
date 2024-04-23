@@ -1,0 +1,23 @@
+<ion-header>
+  <app-header class="LargeNormal"  title="Notifications"></app-header>
+</ion-header>
+<ion-content class="ion-margin ion-padding-vertical">
+  <ion-row class="ion-padding notification-container" *ngFor="let notification of notificationList">
+    <ion-row class="ion-justify-content-between wid100 ion-align-items-center">
+      <ion-col *ngIf="notification.newNotificationStatus">
+        <ion-icon class="dot-icon" name="ellipse"></ion-icon>
+        <ion-label class="Mediumbold" color="dark">{{notification.notificationTitle}}</ion-label>
+      </ion-col>
+      <ion-label *ngIf="!notification.newNotificationStatus" class="Mediumbold" color="dark">{{notification.notificationTitle}}</ion-label>
+      <ion-label class="SmallNormal">{{notification.notificationTime}}</ion-label>
+    </ion-row>
+    <ion-row class="ion-margin-top notification-detail ion-justify-content-between ion-align-items-center wid100">
+      <ion-label color="dark" class="MediumNormal">{{notification.notificationDesc}}</ion-label>
+      <ion-icon *ngIf="!notification.newNotificationStatus" name="chevron-forward-outline"></ion-icon>
+    </ion-row>
+  </ion-row>
+
+  <ion-row class="wid100 ion-padding-top ion-justify-content-center">
+    <ion-label color="secondary" class="Mediumbold view-more-label">View Older Notifications</ion-label>
+  </ion-row>
+</ion-content>

@@ -1,0 +1,45 @@
+<div class="summary-card-container" *ngFor="let record of records">
+  <div class="inner-summary-card-container">
+    <div *ngIf="record.orderstatus === 'Cancelled'" class="cancelled-label ion-text-center">
+      <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+    </div>
+    <div *ngIf="record.orderstatus === 'Confirmed'" class="completed-label ion-text-center">
+      <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+    </div>
+    <div *ngIf="record.orderstatus === 'Placed'" class="placed-label ion-text-center">
+      <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+    </div>
+    <div *ngIf="record.orderstatus === 'Delivered'" class="delivered-status-label ion-text-center">
+      <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+    </div>
+    <ion-row>    
+      <ion-col>
+        <ion-row class="ion-justify-content-between ion-align-items-center wid100" style="margin-bottom: 0.3rem;">
+          <ion-label color="dark" class="VSmallNormal">Order ID: <b>#{{record.id}}</b></ion-label>
+          <ion-label style="margin-right: 10px;" color="dark" class="VSmallNormal">{{record.createdat | date: "dd/MM/yy HH:mm a"}}</ion-label>    
+        </ion-row>       
+        <ion-row class="ion-justify-content-between ion-align-items-center wid100">
+          <ion-label color="primary" class="SmallBold">{{getRetailernameForId(record) | truncate: 22}}</ion-label>
+          <ion-label *ngIf="record.ordertype !=='Visit'" color="primary" class="LargeBold">{{record.cart.payableamount | currency: 'INR'}}</ion-label> 
+          <ion-chip *ngIf="record.ordertype === 'Visit'" class="MediumNormal">Party Visit</ion-chip>
+        </ion-row>
+        <ion-row *ngIf="record.ordertype !== 'Visit'" class="ion-align-items-center wid100" style="margin-top: 0.3rem">
+          <ion-label color="dark" class="SmallNormal">Order Details:</ion-label>         
+        </ion-row>     
+          <ion-row  *ngFor="let prd of record.cart.items" class="ion-no-padding ion-no-margin" style="border: 1px dashed grey;">
+            <ion-col style="border-right: 1px dashed grey;" size="8"> <ion-row>
+              <ion-col size="12" class="ion-no-padding ion-no-margin "><ion-label class="ion-no-padding ion-no-margin SmallNormal" color="dark"> {{prd.productname}}</ion-label></ion-col>
+              <ion-col size="12" class="ion-no-padding ion-no-margin "><ion-label class="ion-no-padding ion-no-margin VVSmallNormal" color="dark">( Unit Rate : ₹<b>{{prd.rate}}/{{prd.uom}}</b> )</ion-label></ion-col>
+            </ion-row></ion-col>
+            <ion-col style="border-right: 1px dashed grey" size="2"><ion-label class="ion-no-padding ion-no-margin SmallNormal" color="dark">{{prd.billedquantity}}{{prd.uom}}</ion-label></ion-col>
+            <ion-col size="2"><ion-label class="ion-no-padding ion-no-margin SmallNormal" color="dark">₹{{prd.mrp}}</ion-label></ion-col>
+       
+        </ion-row>     
+        <ion-row style="margin-top: 0.3rem" class="ion-align-items-center ion-justify-content-end">
+          <ion-label color="medium" class="VSmallNormal">Booked By : {{record.salesstaffname}} </ion-label>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </div>
+  <img *ngIf="pipaylib.loginService.loggedinstafftype?.editorder && record.orderstatus === 'Placed' && !record.posted" src="../../../assets/Resources/Icons/pen.png" alt="editicon" class="top-right-image" (click)="editOrder(record)">
+</div>

@@ -1,0 +1,139 @@
+.upload-container {
+  background-color: white;
+  width: 100%;
+  min-height: 200px;
+  height: 400px;
+  margin: 1rem auto;
+}
+
+.upload-container .icon {
+  height: 50px;
+}
+
+.toolBarTitle {
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  color: white;
+}
+
+.upload-container .invoice {
+  height: 100%;
+}
+
+ion-back-button {
+  display: block;
+  --color: #fff;
+}
+
+.itemrow {
+  --padding-start: 0px !important;
+  // --background: linear-gradient(to left, var(--ion-color-secondary), var(--ion-color-primary));
+  --background: var(--ion-color-primary);
+}
+
+ion-button {
+  height: 2.8rem;
+}
+
+.fssaimodal {
+  --border-radius: 16px;
+  ion-content {
+    --overflow: hidden;
+  }
+  ion-header {
+    padding: 5px;
+  }
+  ion-toolbar {
+    border-bottom: 1px solid var(--ion-darkgrey-color);
+  }
+  ion-label {
+    color: #000;
+  }
+}
+
+.footer-of-modal {
+  width: 100%;
+  padding: 1rem;
+}
+
+.skipbtn {
+  background-color: white;
+  text-align: center;
+  border: 1px solid var(--ion-colorr-primary);
+  padding: 5px;
+  width: 50px;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 10000;
+  right: 1rem;
+  top: 0.7rem;
+  cursor: pointer;
+}
+
+.inputbox {
+  background-color: #fff;
+  width: auto;
+  border: 0.5px solid #8c8d8f;
+  border-radius: 10px;
+  padding: 8px;
+  margin: 1rem;
+}
+
+.otp-inner-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  // background-color: var( --ion-lightgrey-color);
+  color: black;
+  // height: 200px;
+  // border-radius: 20px;
+  padding: 2.2rem 1.6rem;
+}
+
+.otp-inner-wrapper ion-input {
+  margin: 0.5rem 0px;
+  background-color: #eaeaea;
+  border-radius: 5px;
+}
+
+.otp-inner-wrapper ion-button {
+  align-self: center;
+  width: auto;
+}
+
+.otp {
+  width: 8vh;
+  height: 8vh;
+  border-radius: 5px;
+  // background-color: var(--ion-lightgrey-color);
+  background-color: #4ac7ff;
+  color: #000;
+  .native-input {
+    padding: 10px 0px !important;
+  }
+}
+
+ion-modal::part(backdrop) {
+  background: rgb(55, 55, 55);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.7);
+  opacity: 1;
+}
+
+ion-input {
+  color: black;
+}
+
+.otp-modal {
+  // --border-radius: 16px;
+  ion-content {
+    --overflow: hidden;
+    --background: var(--ion-lightestgrey-color);
+  }
+  ion-header {
+    padding: 5px;
+  }
+  ion-label {
+    color: #000;
+  }
+}

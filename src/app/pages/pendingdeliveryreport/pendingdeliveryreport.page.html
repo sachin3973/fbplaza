@@ -1,0 +1,98 @@
+<ion-header>
+  <app-header title="Pending Deliveries Report"></app-header>
+</ion-header>
+
+<ion-content class="contentbg">
+  <!-- FROM TO DATE Wrapper -->
+  <ion-row class="ion-justify-content-between">
+    <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-text class="SmallNormal labelcolor">From Date</ion-text>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="fromDate" ></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+    <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-text class="SmallNormal labelcolor">To Date</ion-text>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="toDate" ></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <!--View Report Button Wrapper -->
+  <ion-row class="ion-align-items-center ion-justify-content-center">
+    <ion-col size="6" class="ion-align-items-center ion-justify-content-center">
+      <ion-button [disabled] ="!toDate || !fromDate" class="SmallNormal" (click)="getPendingInvoices();" expand="block" color="primary" shape="round">Search</ion-button>
+    </ion-col>
+  </ion-row> 
+
+  <!-- Not Found Image -->
+  <div style="text-align: center; margin-top: 2rem;" class="not-found-image-wrapper" *ngIf="pendinginvoices && pendinginvoices.length === 0">
+    <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-label  color="dark">No Pending Invoices</ion-label>
+  </div>
+
+  <!-- INVOICES  -->
+  <div *ngFor="let invoice of pendinginvoices">
+    <div class="invoice-card-container ion-margin-horizontal ion-margin-top ion-activatable"  >
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div >
+        <ion-row class="ion-justify-content-between invoice-heading ion-align-items-center">
+          <div>
+            <ion-label class="SmallNormal" style="color: var(--ion-text-color); margin-right: 3px">Invoice No.:</ion-label>
+            <ion-label class="VSmallBold" color="dark">#{{invoice.invoicenumber}} </ion-label>
+          </div>
+          <ion-row *ngIf="invoice.invoicestatus === 'New'" class="new-invoice-status ion-align-items-center">
+            <ion-icon color="primary" class="invoice-card-dot" name="ellipse"></ion-icon>
+            <ion-label class="VSmallBold" color="primary">{{invoice.invoicestatus}}</ion-label>
+          </ion-row>
+          <ion-row *ngIf="invoice.invoicestatus === 'Invoice updated'" class="updated-invoice-status ion-align-items-center">
+            <ion-icon class="invoice-status-icon" color="secondary" name="document-text-outline"></ion-icon>
+            <ion-label  class="VSmallBold" color="secondary">{{invoice.invoicestatus}}</ion-label>
+          </ion-row>
+          <ion-row *ngIf="invoice.invoicestatus === 'Delivered'" class="delivered-invoice-status ion-align-items-center">
+            <ion-icon class="invoice-status-icon" color="warning" name="cube"></ion-icon>
+            <ion-label class="VSmallBold" color="warning">{{invoice.invoicestatus}}</ion-label>
+          </ion-row>
+          <ion-row *ngIf="invoice.invoicestatus === 'Payment failed'" class="failed-invoice-status ion-align-items-center" >
+            <ion-icon class="invoice-status-icon" color="danger" name="alert-circle"></ion-icon>
+            <ion-label class="VSmallBold" color="danger">Failed</ion-label>
+          </ion-row>
+          <ion-row *ngIf="invoice.invoicestatus === 'Partially paid'" class="partially-invoice-status ion-align-items-center">
+            <ion-icon class="invoice-status-icon" color="warning" name="checkmark-circle"></ion-icon>
+            <ion-label class="VSmallBold" color="warning">Partial</ion-label>
+          </ion-row>
+        </ion-row>
+        <ion-row class="ion-justify-content-between ion-align-items-center ">
+          <ion-label style="width: 60%; text-align: left;" color="dark" class="MediumSemibold retailer-name">{{invoice.distyretailername}}</ion-label>
+        </ion-row>
+      </div>
+      <ion-row class="ion-align-items-center">
+        <ion-col  class="invoice-details SmallNormal">
+          <ion-row>
+            <ion-label style="margin-bottom:5px; color: var(--ion-text-color)">Invoice Date: {{invoice.invoicedate}}</ion-label>
+            <ion-label style="color: var(--ion-text-color)">Due Date: {{invoice.duedate}}</ion-label>
+          </ion-row>
+          <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.invoicestatus === 'Payment failed' && failureCharges > 0" class="failed-invoice-status">
+            <ion-label color="danger">Failure Charges: ₹ {{invoice.failurecharges}}</ion-label>
+          </div>
+          <div style=" margin-left: -0.3rem; margin-top: 1rem; width: 170px;" *ngIf="invoice.disc > 0 " class="failed-invoice-status">
+            <ion-label color="danger">Discount: ₹ {{invoice.disc}}</ion-label>
+          </div>
+        </ion-col>
+        <div class="invoice-amount ion-padding-vertical">
+          <ion-label  color="secondary" class="VLargeSemibold">₹ {{(invoice.invoiceamount + (invoice.failurecharges ? invoice.failurecharges : 0)) - (invoice.paidamount ? invoice.paidamount : 0)}}</ion-label>
+        </div>
+      </ion-row>
+    </div>
+  </div>
+
+</ion-content>

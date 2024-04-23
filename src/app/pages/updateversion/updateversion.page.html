@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-row class="ion-align-items-center LargeNormal" style="height: 55px;">       
+      <ion-title>Update Version</ion-title>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="contentbg">
+  
+  <div class="container">
+  <img class="updatelogo" src="../../../assets/Resources/other/rocket.png" alt="">
+  <section>
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+    <div class="wave wave4"></div>    
+  </section>
+  <div class="flexCol">
+    <ion-label class="VLargeBold ion-padding-top" color="primary">Hi ! There</ion-label>
+    <ion-label class="LargeSemibold ion-padding-vertical" color="primary">This Application Requires Update</ion-label>
+      <ion-button *ngIf="!webapp" (click)="upgrade()"color="secondary" class="ion-margin-top texttransform MediumNormal"> Upgrade </ion-button>
+      <ion-button *ngIf="webapp" (click)="refresh()"color="secondary" class="ion-margin-top texttransform MediumNormal"> Get Latest </ion-button>
+      <ion-label class="SmallNormal ion-margin-bottom ion-padding-bottom" color="primary">( Click to Upgrade Application )</ion-label>  
+  </div>
+  </div>
+ 
+
+  
+</ion-content>

@@ -1,0 +1,25 @@
+<div>
+  <ion-grid class="route-container ion-activatable" *ngFor="let invoice of processedInvoice" >
+    <div (click)="invoicesBymode(invoice)">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <ion-row size="12" class="ion-align-items-center ion-padding-vertical">
+        <ion-label class="MediumNormal">{{invoice.description}}</ion-label>
+        <img *ngIf="invoice.id === 'Cash'" class="route-icon ion-margin-start" style="height:4vh ;" src="../../../assets/Resources/Icons/cashicon.png" alt="cash icon">
+        <img *ngIf="invoice.id === 'Cheque'" class="route-icon ion-margin-start" style="height:4vh ;" src="../../../assets/Resources/Icons/cheque.png" alt="cash icon">
+        <ion-icon class="forward-icon" name="chevron-forward-outline"></ion-icon>
+      </ion-row>
+      <ion-row class="ion-justify-content-between">
+        <ion-row>
+          <ion-label class="route-label ion-margin-end">Invoices</ion-label>
+          <br>
+          <ion-label style="text-align: center">({{invoice.summaryval1}})</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="MediumNormal ion-margin-end">Amount</ion-label>
+          <br>
+          <ion-label class="MediumSemibold">{{invoice.summaryval2 | currency: 'INR'}}</ion-label>
+        </ion-row>
+      </ion-row>
+    </div>
+  </ion-grid>
+</div>

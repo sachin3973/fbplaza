@@ -1,0 +1,514 @@
+<div *ngIf="!cameFromPartywise">
+  <ion-header>
+    <app-header [fromRequisition]="fromRequisition"  goBackToInvoices="true" title="Select Payment Mode"></app-header>
+  </ion-header>
+</div>
+<div *ngIf="cameFromPartywise">
+  <ion-header>
+    <ion-item lines="none" class="itemrow header">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="2">
+          <ion-back-button mode="md" (click)="goToPartywise()">
+            <ion-icon name="close"></ion-icon>
+          </ion-back-button>
+        </ion-col>  
+        <ion-col size="10"><ion-label class="toolBarTitle ion-margin-start">Payment Mode</ion-label></ion-col>  
+      </ion-row>
+    </ion-item>
+  </ion-header>
+</div>
+
+
+<ion-content *ngIf="!isprocessing" class="contentbg" style="--overflow: hidden !important;">
+  <ion-row class="ion-justify-content-around ion-padding-top" style="margin-left: 8px;margin-right: 8px;">
+    <ion-label color="dark" class="MediumSemibold">Invoice No : {{processInvoice.invoiceno}}</ion-label>
+    <!-- <ion-label color="dark" *ngIf="invoiceStatus !== 'Partially paid' && invoiceStatus !== 'Payment failed'" class="MediumSemibold">Amount : ₹ {{invoiceamount}}</ion-label>
+    <ion-label color="dark" *ngIf="invoiceStatus === 'Partially paid' && selectedInvoice.failurecharges >= 0" class="MediumSemibold">Amount : ₹ {{(invoiceamount + selectedInvoice.failurecharges) - paidamount}}</ion-label>
+    <ion-label color="dark" *ngIf="invoiceStatus === 'Payment failed' && paidamount" class="MediumSemibold">Amount : ₹ {{(invoiceamount + selectedInvoice.failurecharges) - paidamount}}</ion-label>
+    <ion-label color="dark" *ngIf="invoiceStatus === 'Payment failed' && !paidamount" class="MediumSemibold">Amount : ₹ {{invoiceamount + selectedInvoice.failurecharges}}</ion-label>     -->
+    <ion-label color="dark" class="MediumSemibold">Amount : ₹ {{payableamount}}</ion-label>    
+  
+  
+  </ion-row>
+  <ion-row class="ion-justify-content-end "><ion-label style="padding-right: 10px;" color="danger" *ngIf="(invoiceStatus === 'Payment failed' || invoiceStatus === 'Partially paid') && selectedInvoice.failurecharges > 0" class="VSmallNormal ion-float-right">( Inclusive of Failure charges )</ion-label>
+  </ion-row>
+  <!--payment mode -->
+  <ion-row class="ion-justify-content-center" >
+    <ion-row *ngIf="!hidepayment" class="ion-justify-content-center" style="margin: 0px 5px 0px 2px;">
+      <div class="payment-mode-container ion-margin-top ion-activatable" (click)="selectCash(); openModal();">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div class="payment-box">         
+          <img src="../../../assets/Resources/Icons/cashicon.png" alt="cash">
+          <ion-label class="ion-margin-start MediumNormal">Cash</ion-label>
+        </div>
+      </div>
+      <div *ngIf="creditallowed" class="payment-mode-container ion-margin-top ion-activatable" (click)="openModal('cheque'); selectCheque();">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div class="payment-box">          
+          <img src="../../../assets/Resources/Icons/cheque.png" alt="cheque">
+          <ion-label class="ion-margin-start MediumNormal">Cheque</ion-label>
+        </div>
+      </div>
+      <div class="payment-mode-container ion-margin-top ion-activatable" (click)="openModal('neft'); selectNeft();">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div class="payment-box">
+          <img style="height: 2rem; padding: 0.3rem 1rem; border: 1px solid #d9d9d9; border-radius: 5px" src="../../../assets/Resources/Icons/neft.png" alt="UPI">
+          <ion-label class="ion-margin-start MediumNormal">NEFT</ion-label>
+        </div>  
+      </div>
+      <div class="payment-mode-container ion-margin-top ion-activatable" (click)="selectUpi(); openModal();">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div class="payment-box">
+          <img src="../../../assets/Resources/Icons/upiicon.png" alt="UPI">
+          <ion-label class="ion-margin-start MediumNormal">UPI</ion-label>
+        </div>
+      </div>
+      <div *ngIf="!creditallowed" class="payment-mode-container ion-margin-top ion-activatable" (click)="sendNachlink()">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <div class="payment-box">
+          <img src="../../../assets/Resources/Icons/Nachicon.png" alt="nach">
+          <ion-label class="ion-margin-start MediumNormal">NACH</ion-label>
+        </div>
+      </div>
+    </ion-row>
+
+    <ion-row *ngIf="enablepipay" class="payment-container ion-margin-top ion-activatable" (click)="goToPipayPayment()">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div class="payment-box">
+        <img class="cancel-image" src="../../../assets/Resources/Icons/pipay icon (1).png" alt="cancellation icon">
+        <ion-label class="ion-margin-start MediumNormal">PiPay Payment</ion-label>
+      </div>
+    </ion-row>
+
+    <ion-row *ngIf="creditallowed && !hidepayment" class="payment-container ion-margin-top ion-activatable" (click)="sendNachlink()">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div class="payment-box">
+        <img src="../../../assets/Resources/Icons/Nachicon.png" alt="nach">
+        <ion-label class="ion-margin-start MediumNormal">Send NACH link</ion-label>
+      </div>
+    </ion-row>
+    <ion-row  *ngIf="creditnoteallowed" class="payment-container ion-margin-top ion-activatable" (click)="selectCredit(); openCreditModal()">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div class="payment-box">
+        <img style="height: 2.2rem; padding: 0.1rem 1rem; border: 1px solid #d9d9d9; border-radius: 5px" src="../../../assets/Resources/Icons/credit.png" alt="del">
+        <ion-label class="ion-margin-start MediumNormal">Credit Note / Return Items</ion-label>
+      </div>
+    </ion-row>
+    <ion-row class="payment-container ion-margin-top ion-activatable" (click)="selectDeliver(); processCreditBillinvoice()" *ngIf="(invoiceStatus === 'New' || (invoiceStatus === 'Partially paid' && cnonly) ) && dwpallowed">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div class="payment-box">
+        <img src="../../../assets/Resources/Icons/delivery.png" alt="del">
+        <ion-label class="ion-margin-start MediumNormal">Delivery without payment</ion-label>
+      </div>
+    </ion-row>
+    <ion-row class="payment-container ion-margin-top ion-activatable" (click)="openCancelModal()" *ngIf="invoiceStatus === 'New'">
+      <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+      <div class="payment-box">
+        <img class="cancel-image" src="../../../assets/Resources/other/cancellation.jpeg" alt="cancellation icon">
+        <ion-label class="ion-margin-start MediumNormal">Cancel Invoice</ion-label>
+      </div>
+    </ion-row>   
+  </ion-row>
+
+  <!-- Cheque Detail Modal -->
+  <ion-modal #chequemodal class="chequemodal" [isOpen]="showchequemodal" (didDismiss)="showchequemodal = false" style="--height: 70%; --width: 95%"  handleBehavior="cycle" >
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismissChequeModal = true;chequemodal.dismiss();closeChequeModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white">Cheque Details</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissChequeModal = true; chequemodal.dismiss();closeChequeModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="ion-padding-horizontal">
+          
+           <div *ngIf="distyconfig.banknameinstaffapp" id="bank-name">           
+              <ion-row (click)="openbankModal()">
+                <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="selectedBank" type="text" placeholder="Enter Bank Name"></ion-input>                
+              </ion-row>             
+            </div>
+
+          <ion-row>
+            <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="processInvoice.instrumentref" type="text" placeholder="Enter Cheque Number"></ion-input>
+            <!-- <ion-icon (click)="takePicture()" color="primary" size="large" style="margin-left: -3.5rem; margin-top: 1.5rem; margin-right: 1rem" name="camera-reverse-outline"></ion-icon> -->
+          </ion-row>
+
+          <ion-row class="ion-justify-content-between ion-align-items-center chequeinputbox ion-margin-top">
+            
+            <ion-input type="date" class="ion-padding MediumNormal" [(ngModel)]="chqDate" ></ion-input>
+            <ion-icon (click)="decreaseChequeDate()" size="large" style="color: var(--ion-color-primary);" name="remove-circle-outline"></ion-icon>
+            <ion-icon (click)="inncreaseChequeDate()"  size="large" style="color: var(--ion-color-primary);" name="add-circle-outline"></ion-icon>
+          </ion-row>
+
+          <!-- <div class="ion-margin-top">
+            <ion-button [disabled]="!processInvoice.bankname || !processInvoice.instrumentref || !chqDate" (click)="showchequebtn = false;" id="open-modal" shape="round" class=" text MediumNormal" expand="block">Collect Payment</ion-button>
+          </div> -->
+        </div>
+        
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer" >
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button *ngIf="!imageforcheque" style="width: 60%" [disabled]="!processInvoice.instrumentref || !chqDate" (click)="confirmPayment();canDismissChequeModal=true;chequemodal.dismiss();closeChequeModal();" shape="round" class="text MediumNormal texttransform" expand="block">Collect Payment</ion-button>
+            <ion-button *ngIf="imageforcheque" style="width: 60%" [disabled]="!processInvoice.instrumentref || !chqDate" (click)="confirmPayment();canDismissChequeModal=true;chequemodal.dismiss();closeChequeModal();" shape="round" class="text MediumNormal texttransform" expand="block">Upload Cheque</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Bank Modal -->
+  <ion-modal #bankmodal [isOpen]="showbankmodal" (didDismiss)="showbankmodal = false" >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="toolbar" style="border: none !important">
+          <ion-title slot="start" class="Mediumbold">Bank List </ion-title>
+          <ion-buttons slot="end"> <ion-button (click)="canDismissbankModal = true;bankmodal.dismiss();closebankModal();"> <ion-icon slot="icon-only" name="close"></ion-icon> </ion-button> </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-searchbar class="MediumNormal crudsearchbar" [(ngModel)]="strsearch" ></ion-searchbar>
+        <!-- <ion-item lines="none" *ngFor="let bank of bankList | filter:strsearch" (click)="confirm(bank)" class="MediumNormal inputtxt-color" > {{bank.name}}</ion-item> -->
+        <ion-item lines="none" *ngFor="let bank of bankList | filter:strsearch" (click)="confirm(bank)" class="MediumNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <div>
+            <ion-label color="dark">{{bank.name}}</ion-label>
+          </div>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- NEFT Modal -->
+  <ion-modal #neftmodal class="neftmodal" [isOpen]="showneftmodal" (didDismiss)="showneftmodal = false" style="--height: 60%; --width: 95%" handleBehavior="cycle" >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismissNeftModal = true;neftmodal.dismiss();closeNeftModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white">UTR Number</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissNeftModal = true; neftmodal.dismiss();closeNeftModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="ion-padding-horizontal">
+          <ion-row>
+            <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="utrRef" type="text" placeholder="Enter UTR Reference"></ion-input>
+          </ion-row>
+        </div>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer" >
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="ion-justify-content-center">
+            <ion-button style="width: 60%" [disabled]="!utrRef" (click)="confirmPayment();canDismissNeftModal=true;neftmodal.dismiss();closeNeftModal();" shape="round" class="text MediumNormal texttransform" expand="block">Collect Payment</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+  
+  <!-- Partial Payment Modal -->
+  <ion-modal #paymentmodal class="paymentmodal" [ngClass]="{'full-screen-modal' : paymentremark, 'modal-height' : !paymentremark}" [isOpen]="showmodal" (didDismiss)="showmodal = false" handleBehavior="cycle" >
+    <ng-template >
+      <ion-header>
+        <ion-toolbar style="border: none !important" class="ion-text-center toolbar">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismiss = true;paymentmodal.dismiss();closemodal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white;">Select Collected Amount</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismiss = true;paymentmodal.dismiss();closemodal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>              
+        <ion-radio-group  [(ngModel)]="paymenttyp" mode="md" class="whitebg" #radioGroup (ionChange)="selectpartail($event)">
+          <ion-item lines="none" color="accord" class="ion-margin paymentmodal-item ion-align-items-center" >
+            <!-- <ion-label *ngIf="selectedInvoice.invoicestatus === 'New' || selectedInvoice.invoicestatus === 'Delivered'" class="MediumNormal">Payable Amount ₹ {{selectedInvoice.invoiceamount}}</ion-label>
+            <ion-label *ngIf="selectedInvoice.invoicestatus === 'Partially paid' && selectedInvoice.failurecharges >=0 " class="MediumNormal">Payable Amount ₹ {{(selectedInvoice.invoiceamount + selectedInvoice.failurecharges) - selectedInvoice.paidamount}}</ion-label>            
+            <ion-label *ngIf="selectedInvoice.invoicestatus === 'Payment failed' && !selectedInvoice.paidamount" class="MediumSemibold">Payable Amount : ₹ {{selectedInvoice.invoiceamount + selectedInvoice.failurecharges}}</ion-label>
+            <ion-label *ngIf="selectedInvoice.invoicestatus === 'Payment failed' && selectedInvoice.paidamount" class="MediumSemibold">Payable Amount : ₹ {{(selectedInvoice.invoiceamount + selectedInvoice.failurecharges) - selectedInvoice.paidamount}}</ion-label> -->
+            <ion-label class="MediumNormal">Payable Amount : ₹ {{payableamount}}</ion-label> 
+            <ion-radio slot="start" value="fullpay"></ion-radio>   
+          </ion-item>
+          <div *ngIf="processInvoice.paymentmode !== 'UPI' || !distyconfig.liveupi" class="divflexCol ion-margin-top ion-margin-horizontal paymentmodal-item" style="border-radius:20px !important ;">
+            <ion-item lines="none" color="accord" class="ion-align-items-center paymentmodal-item"> 
+              <ion-label class="MediumNormal">Partial Payment</ion-label>
+              <ion-radio slot="start" value="partialpay"></ion-radio>                               
+            </ion-item>
+            <div class="wid100" style="background-color: white;" [hidden]="paymenttyp !=='partialpay'">
+              <ion-input #myInput [(ngModel)]="partailamount" (ionBlur)="inputBlur(partailamount)" class="ion-padding ion-margin partialinputbox MediumNormal" type="number" placeholder="Enter Collected Amount"></ion-input>                
+            </div>
+            <div *ngIf="paymentremark" class="wid100" style="background-color: white;"  [hidden]="paymenttyp !=='partialpay'">
+              <ion-input (ionBlur)="inputPartialBlur(remarks)" class="ion-padding ion-margin partialinputbox MediumNormal" [(ngModel)]="remarks" type="text" placeholder="Enter Remark"></ion-input>
+            </div>
+          </div>
+        </ion-radio-group>
+      </ion-content>
+      <ion-footer class="partialpayment-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-around">
+            <div *ngIf="!showupibtn && isPaymentModeCheque !== 'cheque' && isPaymentModeCheque !== 'neft'">
+              <ion-button [disabled] = "(paymenttyp === 'partialpay' || paymenttyp !== 'fullpay') && !partailamount" (click)="confirmPayment();paymentmodal.dismiss();closemodal();" expand="block" shape="round" class="MediumSemibold texttransform">Confirm </ion-button>
+            </div>
+            <div *ngIf="showupibtn && isPaymentModeCheque !== 'cheque' && isPaymentModeCheque !== 'neft'">
+              <ion-button [disabled] = "(paymenttyp === 'partialpay' || paymenttyp !== 'fullpay') && !partailamount" (click)="openQrModal();paymentmodal.dismiss();closemodal();" expand="block" shape="round" class="MediumSemibold texttransform">Confirm </ion-button>
+            </div>
+            <div *ngIf="isPaymentModeCheque === 'cheque'">
+              <ion-button [disabled] = "(paymenttyp === 'partialpay' || paymenttyp !== 'fullpay') && !partailamount" (click)="openChequeModal();paymentmodal.dismiss();closemodal();" expand="block" shape="round" class="MediumSemibold texttransform">Confirm </ion-button>
+            </div>
+            <div *ngIf="isPaymentModeCheque === 'neft'">
+              <ion-button [disabled] = "(paymenttyp === 'partialpay' || paymenttyp !== 'fullpay') && !partailamount" (click)="openNeftModal();paymentmodal.dismiss();closemodal();" expand="block" shape="round" class="MediumSemibold texttransform">Confirm </ion-button>
+            </div>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Credit Note Modal -->
+  <ion-modal #creditmodal class="cancellationmodal" [isOpen]="showcreditmodal" (didDismiss)="showcreditmodal = false" style="--height: 100%; --width: 100%"  handleBehavior="cycle">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismissCreditModal=true; creditmodal.dismiss(); closeCreditModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white;">Enter Credit Note Details</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissCreditModal = true; creditmodal.dismiss(); closeCreditModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal cancellationmodal-item" style="border-radius:20px !important ;">
+          <div class="method-selection" style="position: relative; margin: 0px 12px;">
+            <div class="ion-margin-bottom" style="margin-left: 5px;">
+              <!-- <ion-label *ngIf="selectedInvoice.invoicestatus === 'New' || selectedInvoice.invoicestatus === 'Delivered'" class="MediumSemibold">Credit Amount ₹ {{selectedInvoice.invoiceamount}}</ion-label>
+              <ion-label *ngIf="selectedInvoice.invoicestatus === 'Partially paid' && selectedInvoice.failurecharges >=0 " class="MediumSemibold">Credit Amount ₹ {{(selectedInvoice.invoiceamount + selectedInvoice.failurecharges) - selectedInvoice.paidamount}}</ion-label>
+              <ion-label *ngIf="selectedInvoice.invoicestatus === 'Payment failed' && !selectedInvoice.paidamount" class="MediumSemibold">Credit Amount : ₹ {{selectedInvoice.invoiceamount + selectedInvoice.failurecharges}}</ion-label>
+              <ion-label *ngIf="selectedInvoice.invoicestatus === 'Payment failed' && selectedInvoice.paidamount" class="MediumSemibold">Credit Amount : ₹ {{(selectedInvoice.invoiceamount + selectedInvoice.failurecharges) - selectedInvoice.paidamount}}</ion-label> -->
+              <ion-label class="MediumNormal">Credit Amount</ion-label>
+              <ion-input #creditinput class="ion-padding ion-margin-top creditinput MediumNormal" [(ngModel)]="processInvoice.paidamount" type="number"></ion-input>
+            </div>
+
+            <ion-row (click)="showCreditReasonsOnClick()" style="background-color: var(--ion-lightestgrey-color);">
+              <ion-label class="MediumNormal">{{selectedCreditReason ? selectedCreditReason : 'Select Reason For Credit'}}</ion-label>
+              <div style="position:absolute; right: 0.8rem; top: 7.1rem" *ngIf="!showCreditReasons" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-down-outline"></ion-icon>
+              </div>
+              <div style="position:absolute; right: 0.8rem; top: 7.1rem" *ngIf="showCreditReasons" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-up-outline"></ion-icon>
+              </div>
+            </ion-row>
+            <ion-row *ngIf="showCreditReasons" class="reason-option" >
+              <ion-col (click)="selectCreditReason(reason)" *ngFor="let reason of creditReasons" size="12" class="ion-padding-vertical ion-activatable" style="overflow: hidden; position: relative;">
+                <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+                <ion-label class="SmallNormal">{{reason}}</ion-label>
+              </ion-col>
+            </ion-row>
+
+            <div style="background-color: white;margin-top: 10px;" *ngIf="selectedCreditReason === 'Other'">
+              <ion-textarea style="background-color: #f7f7f7;height: 40px" [autoGrow]="true" autofocus="true" [(ngModel)]="otherreason" type="text" placeholder="Enter Credit Reason" class="SmallNormal reason-input ion-no-padding"></ion-textarea>                
+            </div>
+
+            <div class="flex-start  wid100 ion-margin-top">
+              <!-- <ion-label class="MediumNormal">Credit Remark</ion-label> -->
+              <ion-input class="ion-padding ion-margin-top creditinput MediumNormal" [(ngModel)]="processInvoice.remark" type="text" placeholder="Enter Credit Remarks"></ion-input>
+            </div>
+
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="footer-of-modal">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button *ngIf ="!distyconfig.skipuploadoncn" [disabled] = "!selectedCreditReason && !creditref" (click)="onSendCreditRequest(); creditmodal.dismiss(); closeCreditModal();" expand="block" shape="round" class="MediumSemibold texttransform">Save</ion-button>
+            <ion-button *ngIf ="distyconfig.skipuploadoncn" [disabled] = "!selectedCreditReason && !creditref" (click)="onSendCreditRequest(); creditmodal.dismiss(); closeCreditModal();" expand="block" shape="round" class="MediumSemibold texttransform">Submit</ion-button>      
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-template>
+  </ion-modal>
+
+  <!-- Delivery Without Payment Model -->
+  <ion-modal #otpmodal class="otp-modal" [isOpen]="showotpmodal" (didDismiss)="showotpmodal = false" style="--height: 50%; --width: 95%"  handleBehavior="cycle" >
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="ion-text-center toolbar">
+          <ion-buttons slot="start">
+            <ion-button (click)="candismissotpmodal = true;otpmodal.dismiss();closeOtpModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal">Enter OTP</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="candismissotpmodal = true;otpmodal.dismiss();closeOtpModal();" >
+              <ion-icon slot="icon-only" style="color:var(--ion-darkgrey-color)" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>              
+        <div class="otp-inner-wrapper">
+          <ion-label class="MediumNormal ion-text-center">OTP has been send to +91  {{maskify(processInvoice.retailermobileno)}}</ion-label>
+          <ion-row class="ion-margin-start">
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true" #otp1 [(ngModel)]="otpstr1" (keyup)="getotp($event,otp2)">
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true" #otp2 [(ngModel)]="otpstr2" (keyup)="getotp($event, otp3)" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp3 [(ngModel)]="otpstr3" (keyup)="getotp($event, otp4)" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp4 [(ngModel)]="otpstr4" (keyup)="getotp($event,null)">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-label *ngIf ="!resend"  class="SmallNormal ion-text-center" style="margin: 5px;">Didn't receive OTP? Retry in <span style="color:var(--ion-color-primary)" >00 : {{counter.sec}} </span> </ion-label>
+          <ion-label *ngIf ="resend" class="SmallNormal ion-text-center" style="margin: 5px;"> Click to <span style="color:var(--ion-color-primary)" >Resend </span> </ion-label>
+                   
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-col size="6">
+              <ion-button (click)="verifyOtp()" class="texttransform SmallNormal" expand="block" shape="round">Verify</ion-button>
+        
+            </ion-col>
+          </ion-row>
+          </div>
+      </ion-content>
+      
+    </ng-template>
+  </ion-modal>
+
+  <!-- Request Cancellation Modal -->
+  <ion-modal #cancellationModal class="cancellationmodal " [isOpen]="showcancelmodal" (didDismiss)="showcancelmodal = false" style="--height: 60%; --width: 95%"  handleBehavior="cycle">
+    <ng-template>
+
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismissCancelModal=true; cancellationModal.dismiss(); closecancelmodal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white;">Cancel Invoice</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissCancelModal = true; cancellationModal.dismiss(); closecancelmodal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal cancellationmodal-item" style="border-radius:20px !important ;">
+          <!-- <div class="wid100">
+            <ion-input autofocus="true" [(ngModel)]="reason" (ionInput)="inputBlur(reason)" class="ion-padding ion-margin reasoninputbox" type="text" placeholder="Enter Reason"></ion-input>                
+          </div> -->
+          <div class="method-selection" style="position: relative">
+            <ion-row (click)="showReasonsOnClick()" style="background-color: var(--ion-lightestgrey-color);">
+              <!-- <ion-ripple-effect type="unbounded"></ion-ripple-effect> -->
+              <ion-label class="MediumNormal">{{selectedReason ? selectedReason : 'Select Reason For Cancellation'}}</ion-label>
+              <div style="position:absolute; right: 0.8rem; top: 0.6rem" *ngIf="!showReasons" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-down-outline"></ion-icon>
+              </div>
+              <div style="position:absolute; right: 0.8rem; top: 0.6rem" *ngIf="showReasons" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-up-outline"></ion-icon>
+              </div>
+            </ion-row>
+            <ion-row *ngIf="showReasons" class="reason-option" >
+              <ion-col (click)="selectReason(reason)" *ngFor="let reason of pipaylib.loginService.loggedindistributor.distyconfig.cancelreasons" size="12" class="ion-padding-vertical ion-activatable" style="overflow: hidden; position: relative;">
+                <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+                <ion-label class="SmallNormal">{{reason}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="footer-of-modal">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button [disabled] = "!selectedReason" (click)="onSendCancellationRequest(); cancellationModal.dismiss(); closecancelmodal();" expand="block" shape="round" class="MediumSemibold texttransform">Cancel Invoice</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-template>
+  </ion-modal>
+
+  <!-- Credit Bill Remark Modal -->
+  <ion-modal #creditbillModal class="creditbillModal " [isOpen]="showcreditbillModal" (didDismiss)="showcreditbillModal = false" style="--height: 50%; --width: 95%">
+    <ng-template>
+
+      <ion-header>
+        <ion-toolbar class="ion-text-center toolbar" style="border: none !important">        
+          <ion-label class="MediumNormal" style="color: white;">Credit Bill Remark</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismissCreditbillModal = true; creditbillModal.dismiss(); closecancelmodal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal cancellationmodal-item" style="border-radius:20px !important ;">
+        
+          <div class="method-selection" style="position: relative">
+          
+            <div class="flex-start  wid100 ion-margin-top">
+              <ion-input #crbillRemark class="ion-padding ion-margin-top creditinput MediumNormal" [(ngModel)]="processInvoice.remark" type="text" placeholder="Enter Credit Bill Remarks"></ion-input>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="footer-of-modal">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button (click)="creditbillModal.dismiss(); closeCreditBillModal(); uploadInvoice()" expand="block" shape="round" class="MediumSemibold texttransform">Proceed</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-template>
+  </ion-modal>
+  
+</ion-content>

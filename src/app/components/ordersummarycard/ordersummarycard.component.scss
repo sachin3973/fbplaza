@@ -1,0 +1,59 @@
+.summary-card-container {
+  width: 100%;
+  background-color: #fff;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 2px solid #e6e7f2;
+  box-shadow: 2px 2px 1px 1px #e6e7f2;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.cancelled-label {
+  position: absolute;
+  right: 160px;
+  top: 33px;
+  left: 33px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #ff3800;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.placed-label {
+  position: absolute;
+  right: 160px;
+  top: 33px;
+  left: 33px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #007fff;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.completed-label {
+  position: absolute;
+  right: 160px;
+  top: 33px;
+  left: 33px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #03c03c;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.delivered-status-label {
+  position: absolute;
+  right: 160px;
+  top: 33px;
+  left: 33px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #1f305e;
+  color: #ffffff;
+  // padding: 5px;
+}

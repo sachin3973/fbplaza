@@ -1,0 +1,35 @@
+
+
+<ion-content>
+  <swiper [config]="config" #swiper>
+    <ng-template swiperSlide>
+      <div class="swiper-zoom-container" >
+        <img src="{{img}}">
+      </div>
+    </ng-template>
+  
+  </swiper>
+  </ion-content>
+  
+  <ion-footer>
+    <ion-toolbar color="primary">
+      <ion-row class="ion-margin">
+        <ion-col style="padding: 0px;" size="4" class="ion-text-center">
+          <ion-button color="secondary" (click)="zoom(false)">
+          <ion-icon color="light" size="large" name="remove"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col style="padding: 0px;" size="4" class="ion-text-center">
+          <ion-button color="danger" (click)="close()">
+            <ion-icon size="large" name="close"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col style="padding: 0px;" size="4" class="ion-text-center">
+          <ion-button color="success" (click)="zoom(true)">
+          <ion-icon color="light" size="large" name="add"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-footer>
+  

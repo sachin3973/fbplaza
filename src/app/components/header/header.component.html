@@ -1,0 +1,71 @@
+<ion-item lines="none" class="itemrow header">
+  <ion-row class="ion-align-items-center">      
+    <!-- <ion-col *ngIf="goBackToInvoices != 'true'" size="2"><ion-back-button mode="md" defaultHref="/dashboard"></ion-back-button></ion-col> -->
+    <!-- <ion-col *ngIf="goBackToInvoices != 'true'" (click)="goToDashboard()" size="2"><ion-icon  name="arrow-back-outline" class="headercol" ></ion-icon></ion-col>
+    <ion-col *ngIf="goBackToInvoices == 'true'" (click)="goToInvoices()" size="2"><ion-icon  name="arrow-back-outline" class="headercol" ></ion-icon></ion-col> -->
+    <ion-col *ngIf="goBackToReadyStockEntry !== 'true' && goBackToInvoices !== 'true' && goBackToPaymentMode !== 'true'" size="2">
+      <ion-back-button mode="md" (click)="goToDashboard()">
+        <ion-icon name="close"></ion-icon>
+      </ion-back-button>
+    </ion-col>   
+    <ion-col *ngIf="goBackToReadyStockEntry !== 'true' && goBackToInvoices === 'true' && !fromRequisition" size="2">
+      <ion-back-button mode="md" (click)="goToInvoices()">
+        <ion-icon name="close"></ion-icon>
+      </ion-back-button>
+    </ion-col>  
+    <ion-col *ngIf="goBackToReadyStockEntry !== 'true' && fromRequisition && goBackToInvoices === 'true'" size="2">
+      <ion-back-button mode="md" (click)="goToRequisition()">
+        <ion-icon name="close"></ion-icon>
+      </ion-back-button>
+    </ion-col>  
+    <ion-col *ngIf="goBackToReadyStockEntry === 'true'" size="2">
+      <ion-back-button mode="md" (click)="goToReadyStockEntry()">
+        <ion-icon name="close"></ion-icon>
+      </ion-back-button>
+    </ion-col>
+    <ion-col *ngIf="goBackToPaymentMode === 'true'" size="2">
+      <ion-back-button mode="md" (click)="goToPaymentMode()">
+        <ion-icon name="close"></ion-icon>
+      </ion-back-button>
+    </ion-col>
+    <ion-col size="10"><ion-label class="toolBarTitle ion-margin-start">{{title}}</ion-label></ion-col>  
+  </ion-row>      
+  <ng-content></ng-content>
+</ion-item>
+
+<ion-modal #confirmationmodal class="confirmmodal" [isOpen]="showConfirmationModal" (didDismiss)="showConfirmationModal=false" style="--height: 50%; --width: 95%" handleBehavior="cycle">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="ion-text-center" color="primary" style="border: none !important">
+        <ion-buttons slot="start">
+          <ion-button (click)="canDismissConfirmationModal = true; confirmationmodal.dismiss();closeConfrimationModal();">
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-label class="MediumNormal" style="color: white">Confirmation</ion-label>
+        <ion-buttons slot="end">
+          <ion-button (click)="canDismissConfirmationModal = true; confirmationmodal.dismiss();closeConfrimationModal();" >
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+
+      <div class="ion-margin ion-padding" style="border: 1px solid #ffcc00; background-color: #f4f4ad;">
+        <ion-label class="MediumNormal">Product in cart will not be saved! Are you sure you want to leave Requisition Page</ion-label>
+      </div>
+    </ion-content>
+
+    <ion-footer class="partialpayment-modal-footer">
+      <ion-toolbar style="border: none; --box-shadow: none">
+        <ion-row class="ion-justify-content-center">
+          <ion-button style="width: 60%" (click)="isConfirmed = true;canDismissConfirmationModal=true;confirmationmodal.dismiss();closeConfrimationModal();" shape="round" class="text MediumNormal texttransform" expand="block">Confirm</ion-button>
+        </ion-row>
+      </ion-toolbar>
+    </ion-footer>
+
+  </ng-template>
+</ion-modal>
+
+

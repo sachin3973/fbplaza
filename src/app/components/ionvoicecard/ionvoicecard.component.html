@@ -1,0 +1,48 @@
+<div class="invoice-card-container ion-margin-horizontal ion-margin-top ion-activatable" *ngFor="let invoice of invoices" >
+  <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+  <div>
+    <ion-row class="ion-justify-content-between invoice-heading ion-align-items-center">
+      <div>
+        <ion-label class="SmallNormal" style="color: var(--ion-text-color); margin-right: 3px">Invoice No.:</ion-label>
+        <ion-label class="SmallSemibold" color="dark">#{{invoice.invoicenumber}} </ion-label>
+      </div>
+      <ion-row *ngIf="invoice.invoicestatus === 'New'" class="new-invoice-status ion-align-items-center">
+        <ion-icon color="primary" class="invoice-card-dot" name="ellipse"></ion-icon>
+        <ion-label color="primary">{{invoice.invoicestatus}}</ion-label>
+      </ion-row>
+      <ion-row *ngIf="invoice.invoicestatus === 'Invoice updated'" class="updated-invoice-status ion-align-items-center">
+        <ion-icon class="invoice-status-icon" color="secondary" name="document-text-outline"></ion-icon>
+        <ion-label color="secondary">{{invoice.invoicestatus}}</ion-label>
+      </ion-row>
+      <ion-row *ngIf="invoice.invoicestatus === 'Delivered'" class="delivered-invoice-status ion-align-items-center">
+        <ion-icon class="invoice-status-icon" color="warning" name="cube-outline"></ion-icon>
+        <ion-label color="warning">{{invoice.invoicestatus}}</ion-label>
+      </ion-row>
+      <ion-row *ngIf="invoice.invoicestatus === 'Payment failed'" class="failed-invoice-status ion-align-items-center">
+        <ion-icon class="invoice-status-icon" color="danger" name="alert-circle-outline"></ion-icon>
+        <ion-label color="danger">{{invoice.invoicestatus}}</ion-label>
+      </ion-row>
+      <ion-row *ngIf="invoice.invoicestatus === 'Partially paid'" class="partially-invoice-status ion-align-items-center">
+        <ion-icon class="invoice-status-icon" color="warning" name="checkmark-circle"></ion-icon>
+        <ion-label color="warning">{{invoice.invoicestatus}}</ion-label>
+      </ion-row>
+    </ion-row>
+    <ion-row class="ion-justify-content-between ion-align-items-center ">
+      <ion-label style="width: 60%; text-align: left;" color="dark" class="MediumSemibold retailer-name">{{invoice.distyretailername}}</ion-label>
+      <div class="invoice-amount ion-padding-vertical">
+        <ion-label *ngIf="invoice.invoicestatus !== 'Partially paid'" color="secondary" class="VLargeSemibold">₹ {{invoice.invoiceamount}}</ion-label>
+        <ion-label *ngIf="invoice.invoicestatus === 'Partially paid'" color="secondary" class="VLargeSemibold">₹ {{invoice.invoiceamount - invoice.paidamount}}</ion-label>
+      </div>
+    </ion-row>
+  </div>
+  <ion-row class="ion-align-items-center">
+    <ion-col class="invoice-details SmallNormal">
+      <ion-row>
+        <ion-label style="margin-bottom:5px; color: var(--ion-text-color)">Invoice Date: {{invoice.invoicedate}}</ion-label>
+        <ion-label style="color: var(--ion-text-color)">Due Date: {{invoice.duedate}}</ion-label>
+      </ion-row>
+    </ion-col>
+    <ion-button (click)="selectPaymentMode(invoice)" *ngIf="invoice.invoicestatus === 'New'" class="invoice-button MediumSemibold" color="primary">Deliver</ion-button>
+    <ion-button (click)="selectPaymentMode(invoice)" *ngIf="invoice.invoicestatus !== 'New'" class="invoice-button MediumSemibold" color="primary">Collect</ion-button>
+  </ion-row>
+</div>

@@ -1,0 +1,81 @@
+.summary-card-container {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  overflow: visible;
+  display: inline-block;
+}
+
+.inner-summary-card-container {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
+  padding: 0.5rem;
+  padding-bottom: 0.2rem;
+  display: inline-block;
+}
+
+ion-chip {
+  --background: #74B72E;
+  --color: #fff;
+}
+
+.cancelled-label {
+  position: absolute;
+  right: 160px;
+  top: 23px;
+  left: 23px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #ff3800;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.placed-label {
+  position: absolute;
+  right: 160px;
+  top: 20px;
+  left: 20px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #007fff;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.completed-label {
+  position: absolute;
+  right: 160px;
+  top: 24px;
+  left: 24px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #03c03c;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.delivered-status-label {
+  position: absolute;
+  right: 160px;
+  top: 23px;
+  left: 23px;
+  z-index: 99;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background-color: #1f305e;
+  color: #ffffff;
+  // padding: 5px;
+}
+
+.top-right-image {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  height: 1.5rem;
+  width: 1.5rem;
+}

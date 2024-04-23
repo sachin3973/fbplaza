@@ -1,0 +1,68 @@
+.invoice-card-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem 0.5rem;
+}
+
+.invoice-card-dot {
+  font-size: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 1px;
+}
+
+.invoice-status-icon {
+  margin-right: 0.5rem;
+}
+
+.invoice-heading {
+  border-bottom: 1px solid var(--ion-text-color);
+  padding-bottom: 0.5rem;
+}
+
+ion-button {
+  --border-radius: 0.7rem;
+}
+
+.success-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #d3f0e3;
+  border-radius: 20px;
+}
+
+.new-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: var(--ion-lightgrey-color);
+  border-radius: 20px;
+}
+
+.updated-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: var(--ion-lightgrey-color);
+  border-radius: 20px;
+}
+
+.delivered-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #fff2da;
+  border-radius: 20px;
+}
+
+.failed-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #ffded3;
+  border-radius: 20px;
+}
+
+.partially-invoice-status {
+  padding: 0.3rem 0.5rem;
+  background-color: #fff2da;
+  border-radius: 20px;
+}
+
+.retailer-name {
+  text-decoration: underline;
+}
+
+.invoice-button {
+  text-transform: capitalize;
+}

@@ -1,0 +1,96 @@
+<ion-header mode="md" class="dashboard-header">
+  <ion-toolbar>
+    <ion-row>
+      <ion-buttons>
+        <ion-menu-button mode="md" ></ion-menu-button>
+      </ion-buttons>
+      <ion-row class="ion-justify-content-between ion-align-items-center header-title-wrapper">
+        <ion-label class="LargeNormal">Hello, {{staffName}}</ion-label>
+      </ion-row>
+    </ion-row>
+    <ion-row class="ion-margin-vertical ion-align-items-center dashboard-summary">
+      <ion-col size="3">
+        <div class="dashboard-calendar">
+          <div class="month">
+            <ion-label>{{month}}</ion-label>
+          </div>
+          <div class="date">
+            <ion-label class="MediumNormal">{{date}}</ion-label>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col size="4" id="vertical-border" class="dashboard-summary-detail">
+        <div class="title">
+          <ion-label class="SmallNormal">Order Placed</ion-label>
+        </div>
+        <div class="data">
+          <ion-label class="VLargeSemibold">{{orderConfirmed}}</ion-label>
+        </div>
+      </ion-col>
+      <ion-col size="5" class="dashboard-summary-detail">
+        <div class="title">
+          <ion-label class="SmallNormal">Order Value</ion-label>
+        </div>
+        <div class="data">
+          <ion-label class="VLargeSemibold">₹ {{ordervalue}}</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- For Sales -->
+  <div *ngIf="staffType === 'Sales'">
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-col size="8" > 
+        <ion-label class="Mediumbold" color="dark">My Last 5 Orders</ion-label> 
+      </ion-col>
+      <ion-col size="4"> 
+        <ion-button (click)="goToOrderReport()" style="width: 90%;" size="small" expand="block" color="accent5"> View All Orders
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    
+    <div class="ion-padding" *ngIf="orderList && orderList.length > 0">
+      <app-orderhistorycard [records]="orderList"></app-orderhistorycard>
+    </div>
+
+    <ion-row style="height: 60%;" class="ion-align-items-center ion-justify-content-center ion-padding" *ngIf="orderList && orderList.length === 0">
+      <div class="not-found-image-wrapper">
+        <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+        <br>
+        <ion-label>No Record Found</ion-label>
+      </div>
+    </ion-row>
+  </div>
+
+  <!-- For Delivery -->
+  <ion-row class="card ion-margin-vertical" style="width: 100%;" *ngIf="staffType === 'Delivery'">
+    <div class="method-selection">
+      <ion-row class="ion-justify-content-between ion-align-items-center ion-activatable" style="background-color: var(--ion-lightestgrey-color); overflow: hidden; position: relative;"> 
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <ion-icon name="receipt" color="secondary" size="large"></ion-icon>
+        <ion-label color="dark" class="MediumNormal">Assigned Bills</ion-label>  
+        <div class="align-items-center">
+          <ion-badge class="SmallSemibold">{{orderConfirmed}}</ion-badge>
+        </div>
+      </ion-row> 
+    </div>
+  </ion-row>
+  
+</ion-content>
+<ion-footer>
+  <ion-toolbar style="border: none; --box-shadow: none">
+    <ion-row>
+      <ion-col size="6"> <ion-button color="premium" (click)="goToPaymentSummary()" size="small" class="MediumNormal texttransform" expand="block">Payment Summary</ion-button>
+      </ion-col>
+      <ion-col *ngIf="staffType !== 'Delivery'" size="6"> <ion-button color="secondary" (click)="goToLedger()" size="small" class="MediumNormal texttransform" expand="block">Ledger</ion-button>
+      </ion-col>
+      <ion-col *ngIf="staffType === 'Delivery'" size="6"> <ion-button color="secondary" (click)="goToOrderReport()" size="small" class="MediumNormal texttransform" expand="block">Order Report</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="staffType !== 'Delivery'" class="ion-justify-content-center ion-no-margin ion-no-padding">
+      <ion-button style="width: 100%; height: 3rem" (click)="goToRequisionEntry()" class="MediumNormal texttransform" expand="full">Place New Order</ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

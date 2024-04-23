@@ -1,0 +1,202 @@
+<div *ngIf="showBill" style="background-color: white; color: black">
+  <div class="flex justify-content-between">
+    <div class="col-1">
+      <img *ngIf="curconfig.distylogofile" style="height: 5rem" [src]="curconfig.distylogofile" alt="Logo">
+    </div>
+    <div class="col-11">
+      <div class="flex">
+        <div class="col-4">
+          <!-- <span class="SmallBold">With GST Benefit Where Applicable</span> -->
+        </div>
+        <div class="col-5">
+          <span class="SmallBold" style="text-decoration: underline;">Tax Invoice</span>
+        </div>
+        <div class="col-3">
+          <!-- <span class="SmallBold">Original For Recipient</span> -->
+          <span class="SmallBold">Bill.No : {{selectedOrder?.billseq}} </span>
+          <br>
+          <span class="SmallNormal">Date : {{selectedOrder?.orderdate}}</span>
+          <br>
+          <span class="SmallNormal">Salesman : {{selectedOrder?.salesstaffname}}</span>
+          <br>
+          <span class="SmallNormal">Route : {{retailer?.routename}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-content-between invoice-container">
+    <div class="col-6">
+      <div class="flex">
+        <span class="SmallBold col-12">{{distributor.businessname}}</span>
+      </div>
+      <div class="flex">
+        <span class="SmallNormal col-12">{{ distributor?.addressline1 ? distributor?.addressline1 + ' ' :  '&nbsp;' }}{{ distributor?.addressline2 ? distributor?.addressline2 :  '&nbsp;' }}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">Contact</span>
+        <span class="SmallNormal col-9">: {{distributor.mobileno}}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">GSTIN</span>
+        <span *ngIf="distributor.gstinno" class="SmallNormal col-9">: {{distributor.gstinno}}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">Gst.State</span>
+        <span *ngIf="distributor.gstinno" class="SmallNormal col-9">: {{distributor.statename}}</span>
+      </div>
+      <div class="flex justify-content-between"> 
+        <span class="SmallNormal col-3">PAN</span>
+        <span class="SmallNormal col-9">: {{distributor.panno}}</span>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="flex">
+        <span class="SmallBold col-12">{{selectedOrder?.distyretailername}}</span>
+      </div>
+      <div class="flex">
+        <span class="SmallNormal col-12">{{ retailer?.addressline1 ? retailer?.addressline1 + ' ' :  '&nbsp;' }}{{ retailer?.addressline2 ? retailer?.addressline2 :  '&nbsp;' }}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">Contact</span>
+        <span class="SmallNormal col-9">: {{retailer?.mobileno}}</span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">GSTIN</span>
+        <span class="SmallNormal col-9"> : {{retailer?.gstinno}} </span>
+      </div>
+      <div class="flex justify-content-between">
+        <span class="SmallNormal col-3">Gst.State </span>
+        <span class="SmallNormal col-9"> : {{retailer?.gststate}} </span>
+      </div>
+      <div class="flex justify-content-between"> 
+        <span class="SmallNormal col-3">PAN</span>
+        <span class="SmallNormal col-9">: {{retailer?.panno}}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="selectedOrder" style="border-top: 2px solid black;">
+    <table>
+      <tr class="tableheaderbill SmallNormal">
+        <th style="width: 2%">S.No</th>
+        <th class="ion-text-center" style="width: 50%;">Product Name </th>
+        <th class="ion-text-center" style="width: 5%;">Qty </th>
+        <th class="ion-text-center" style="width: 5%;">UOM </th>
+        <th class="ion-text-center" style="width: 8%;">Rate </th>
+        <th class="ion-text-center" style="width: 5%;">Discount </th>
+        <th class="ion-text-center" style="width: 8%;">Taxable Amount</th>
+        <th class="ion-text-center" style="width: 5%;">GST Rate</th>
+        <th class="ion-text-center" style="width: 5%;">CESS Rate</th>
+        <th class="ion-text-center" style="width: 7%;">Taxes</th>
+      </tr>
+      <tr *ngFor="let product of selectedOrder.cart.items; let i = index" class="tablebody SmallNormal">
+        <td>{{i + 1}}</td>
+        <td class="ion-text-start">{{product.productname}}
+          <span *ngIf="product.hsnno && product.hsnno.length > 0">
+            HSN: {{product.hsnno}}
+          </span>
+          <span style="font-size: x-small;" *ngIf="product.narration && product.narration.length > 0"> <br/> {{product.narration}}</span>
+        </td>
+        <td class="ion-text-center">{{product.actquantity}}</td>
+        <td class="ion-text-center">{{product.uom}}</td>
+        <td class="ion-text-end">{{product.rate | decimalTruncate : 2 | currency : 'INR'}}</td>            
+        <td class="ion-text-end">{{product.disc | decimalTruncate : 2 | currency : 'INR'}}</td>
+        <td class="ion-text-end">{{product.billedamount | decimalTruncate : 2 | currency : 'INR'}}</td>
+        <td class="ion-text-center">{{product.gstrate}}% </td>
+        <td class="ion-text-center">{{product.cessrate}}% </td>
+        <td class="ion-text-end">{{(product.cgst + product.sgst + product.igst + product.cess) ? (product.cgst + product.sgst + product.igst + product.cess | decimalTruncate : 2 | currency : 'INR') : 0 | decimalTruncate : 2 | currency : 'INR'}}</td>
+      </tr>
+    </table>
+ 
+    <div *ngIf="selectedOrder" class="flex justify-content-between align-items-center" style="border-top: 2px solid black;">
+      <div class="col-7">
+        <div>
+          <span class="SmallBold">GST Bifurcation Details:</span>
+        </div>
+        <br/>
+        <div>
+          <table class="tax-table" style="width: 80% !important">
+            <tr>
+              <th class="SmallBold" style="width: 15%">GST%</th>
+              <th class="SmallBold" style="width: 15%">CGST</th>
+              <th class="SmallBold" style="width: 15%">SGST</th>
+              <th class="SmallBold" style="width: 15%">IGST</th>
+              <th class="SmallBold" style="width: 15%">CESS</th>
+            </tr>
+            <tr *ngFor="let gstb of selectedOrder.cart.gstbifurcationlist" class="text-center">
+              <td class="SmallNormal" style="width: 15%">{{gstb.gstrate}}%</td>
+              <td class="SmallNormal" style="width: 15%">{{gstb.cgstamount | decimalTruncate : 2 | currency: 'INR'}}</td>
+              <td class="SmallNormal" style="width: 15%">{{gstb.sgstamount | decimalTruncate : 2 | currency: 'INR'}}</td>
+              <td class="SmallNormal" style="width: 15%">{{gstb.igstamount | decimalTruncate : 2 | currency: 'INR'}}</td>
+              <td class="SmallNormal" style="width: 15%"> <span *ngIf="gstb.gstrate === 28 && selectedOrder.cart.cess > 0"> {{selectedOrder.cart.cess}} </span>
+              <span *ngIf="gstb.gstrate !== 28 || selectedOrder.cart.cess === 0"> 0.00 </span></td>
+            </tr>            
+          </table>
+        </div>
+      </div>
+
+      <div class="col-5">
+        <div class="flex justify-content-between">
+          <span class="SmallBold col-6">Item Amount</span>
+          <span class="SmallBold col-6">: {{selectedOrder?.cart.itemamount | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+
+        <div class="flex justify-content-between">
+          <span class="SmallNormal col-6">Total Discount</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.totaldisc | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+
+        <div *ngIf="selectedOrder && selectedOrder.cart.cgst > 0" class="flex justify-content-between">
+          <span class="SmallNormal col-6">Total CGST</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.cgst | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+        <div *ngIf="selectedOrder && selectedOrder.cart.sgst > 0" class="flex justify-content-between">
+          <span class="SmallNormal col-6">Total SGST</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.sgst | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+        <div *ngIf="selectedOrder && selectedOrder.cart.igst > 0" class="flex justify-content-between">
+          <span class="SmallNormal col-6">Total IGST</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.igst | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+        <div *ngIf="selectedOrder && selectedOrder.cart.cess > 0" class="flex justify-content-between">
+          <span class="SmallNormal col-6">Total CESS</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.cess | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+        
+
+        <div class="flex justify-content-between"> 
+          <span class="SmallNormal col-6">Round Off</span>
+          <span class="SmallNormal col-6">: {{selectedOrder?.cart.roundingamt | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+        <div class="flex justify-content-between"> 
+          <span class="Mediumbold col-6">Bill Amount</span>
+          <span class="Mediumbold col-6">: {{selectedOrder?.cart.payableamount | decimalTruncate : 2 | currency: 'INR'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-left: 0.8rem; margin-bottom: 1rem;" class="flex justify-content-between">
+      <div class="col-7">
+        <span class="SmallNormal">In Words: <b>{{receivableAmountInWords | titlecase}} Only</b></span>
+      </div>
+      <div class="col-5 flex justify-content-end" style="padding-right: 0;">
+        <label class="SmallBold pr-6 text-right" >Customer Signature</label>
+      </div>
+    </div>
+    <div style="margin-left: 0.8rem">
+      <span class="VSmallNormal">Declaration: We here by certify that food/foods mentioned in this invoice is/are warranted to be the nature and quality which they purport to be.</span>
+    </div>
+
+    <div style="margin-left: 0.8rem;" class="flex justify-content-between align-items-center">
+      <div class="col-2">
+        <span class="SmallBold">(E. & O.E.)</span>
+      </div>
+      <div class="col-6">
+        <span *ngIf="curconfig.failurecharges" class="SmallNormal">CHQ RETURN CHARGES {{curconfig.failurecharges}}/-</span>
+      </div>
+      <div class="col-4 flex justify-content-center">
+        <span class="SmallBold">For: {{selectedOrder?.distributorname}}</span>
+      </div>
+    </div>
+  </div>
+</div>

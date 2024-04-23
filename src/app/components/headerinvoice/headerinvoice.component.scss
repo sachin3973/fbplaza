@@ -1,0 +1,17 @@
+.itemrow{
+    --padding-start: 0px !important; 
+    --background-color: transparent;
+    --background: transparent;
+    --color: #fff;   
+}
+
+  .toolBarTitle {    
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+ion-back-button {
+  display: block;
+  --color: #fff;
+}

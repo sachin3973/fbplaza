@@ -1,0 +1,21 @@
+.cash-success-container {
+  margin-top: 3rem;
+  color: var(--ion-darkgrey-color);
+}
+
+.cash-success-inner-container {
+  margin-top: 1rem;
+}
+
+.cash-success-details-wrapper {
+  border: 2px dotted var(--ion-color-success);
+}
+
+.delivery-success-details-wrapper {
+  border: 2px dotted var(--ion-color-warning);
+}
+
+.go-to-invoices {
+  text-decoration: underline;
+  margin-top: 3rem;
+}

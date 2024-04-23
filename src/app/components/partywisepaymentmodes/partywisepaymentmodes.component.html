@@ -1,0 +1,167 @@
+<ion-modal trigger="retailer-name" [isOpen]="openModal" (didDismiss)="openModal = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="toolbar" style="border: none !important; padding: 8px;">
+        <ion-title slot="start"  style="padding: 8px" class="toolBarTitle LargeSemibold">Select Payment Mode</ion-title>
+        <ion-buttons slot="end"> 
+          <ion-button (click)="closePaymentModeDialog()"> 
+            <ion-icon slot="icon-only" name="close"></ion-icon> 
+          </ion-button> 
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-row class="ion-justify-content-between ion-margin-horizontal">
+        <div>
+          <ion-label color="dark" class="MediumNormal">Payable Amount:</ion-label>  
+        </div> 
+        <div>
+          <ion-label color="primary" class="Mediumbold">{{settlementAmount | currency: 'INR'}}</ion-label>
+        </div>
+      </ion-row>
+
+      <!--Payment Modes -->
+      <ion-row class="ion-justify-content-center" >
+        <ion-row class="ion-justify-content-center" style="margin: 0px 5px 0px 2px;">
+          <div [ngClass]="{'selected-paymentmode' : selectedPaymentMode === 'Cash'}" (click)="onSelectPaymentMode('Cash')" class="payment-mode-container ion-margin-top ion-activatable">
+            <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+            <div class="payment-box">         
+              <img src="../../../assets/Resources/Icons/cashicon.png" alt="cash">
+              <ion-label class="ion-margin-start MediumNormal">Cash</ion-label>
+            </div>
+          </div>
+          <div [ngClass]="{'selected-paymentmode' : selectedPaymentMode === 'Cheque'}" (click)="onSelectPaymentMode('Cheque')" class="payment-mode-container ion-margin-top ion-activatable">
+            <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+            <div class="payment-box">          
+              <img src="../../../assets/Resources/Icons/cheque.png" alt="cheque">
+              <ion-label class="ion-margin-start MediumNormal">Cheque</ion-label>
+            </div>
+          </div>
+          <div [ngClass]="{'selected-paymentmode' : selectedPaymentMode === 'NEFT'}" (click)="onSelectPaymentMode('NEFT')" class="payment-mode-container ion-margin-top ion-activatable">
+            <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+            <div class="payment-box">
+              <img style="height: 2rem; padding: 0.3rem 1rem; border: 1px solid #d9d9d9; border-radius: 5px" src="../../../assets/Resources/Icons/neft.png" alt="UPI">
+              <ion-label class="ion-margin-start MediumNormal">NEFT</ion-label>
+            </div>  
+          </div>
+          <div [ngClass]="{'selected-paymentmode' : selectedPaymentMode === 'UPI'}" (click)="onSelectPaymentMode('UPI')" class="payment-mode-container ion-margin-top ion-activatable">
+            <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+            <div class="payment-box">
+              <img src="../../../assets/Resources/Icons/upiicon.png" alt="UPI">
+              <ion-label class="ion-margin-start MediumNormal">UPI</ion-label>
+            </div>
+          </div>
+        </ion-row>
+      </ion-row>
+
+      <!-- Cheque Details -->
+      <div *ngIf="selectedPaymentMode === 'Cheque'" class="ion-padding-horizontal">
+        <div *ngIf="distyconfig?.banknameinstaffapp" id="bank-name">           
+           <ion-row (click)="openbankModal()">
+             <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="selectedBank" type="text" placeholder="Enter Bank Name"></ion-input>                
+           </ion-row>             
+         </div>
+
+       <ion-row>
+         <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="chequeNo" type="text" placeholder="Enter Cheque Number"></ion-input>
+       </ion-row>
+
+       <ion-row class="ion-justify-content-between ion-align-items-center chequeinputbox ion-margin-top">
+         <ion-input type="date" class="ion-padding MediumNormal" [(ngModel)]="chqDate" ></ion-input>
+         <ion-icon (click)="decreaseChequeDate()" size="large" style="color: var(--ion-color-primary);" name="remove-circle-outline"></ion-icon>
+         <ion-icon (click)="inncreaseChequeDate()"  size="large" style="color: var(--ion-color-primary);" name="add-circle-outline"></ion-icon>
+       </ion-row>
+
+       <div *ngIf="distyconfig && distyconfig.partialpaymentremark" class="ion-margin-top">
+        <ion-input class="chequeinputbox MediumNormal ion-padding-horizontal" [(ngModel)]="remarks" type="text" placeholder="Enter Remark"></ion-input>
+      </div>
+      </div>
+
+      <!-- NEFT Details -->
+      <div *ngIf="selectedPaymentMode === 'NEFT'" class="ion-padding-horizontal">
+        <ion-label class="MediumNormal" style="color: white">UTR Number</ion-label>
+        <ion-row>
+          <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="utrRef" type="text" placeholder="Enter UTR Reference"></ion-input>
+        </ion-row>
+        <div *ngIf="distyconfig && distyconfig.partialpaymentremark" class="ion-margin-top ">
+          <ion-input class="chequeinputbox MediumNormal ion-padding-horizontal" [(ngModel)]="remarks" type="text" placeholder="Enter Remark"></ion-input>
+        </div>
+      </div>
+
+     <!-- Remark for cash and upi -->
+      <div *ngIf="(selectedPaymentMode === 'Cash' || selectedPaymentMode === 'UPI') && distyconfig.partialpaymentremark" class="ion-padding-horizontal">
+        <div class="ion-margin-top ">
+          <ion-input class="chequeinputbox MediumNormal ion-padding-horizontal" [(ngModel)]="remarks" type="text" placeholder="Enter Remark"></ion-input>
+        </div>
+      </div>
+
+      <!-- Bank Modal -->
+      <ion-modal #bankmodal [isOpen]="showbankmodal" (didDismiss)="showbankmodal = false" >
+        <ng-template>
+          <ion-header>
+            <ion-toolbar class="toolbar" style="border: none !important">
+              <ion-title slot="start" class="Mediumbold">Bank List </ion-title>
+              <ion-buttons slot="end"> <ion-button (click)="canDismissbankModal = true;bankmodal.dismiss();closebankModal();"> <ion-icon slot="icon-only" name="close"></ion-icon> </ion-button> </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <ion-searchbar class="MediumNormal crudsearchbar" [(ngModel)]="strsearch" ></ion-searchbar>
+            <ion-item lines="none" *ngFor="let bank of bankList | filter:strsearch" (click)="confirm(bank)" class="MediumNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+              <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+              <div>
+                <ion-label color="dark">{{bank.name}}</ion-label>
+              </div>
+            </ion-item>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
+      <!-- Confirmation Modal -->
+      <ion-modal #confirmationmodal class="confirmmodal" [isOpen]="showCashConfirmationModal" (didDismiss)="showCashConfirmationModal=false" style="--height: 50%; --width: 95%" handleBehavior="cycle">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar class="ion-text-center toolbar" style="border: none !important">
+              <ion-buttons slot="start">
+                <ion-button (click)="canDismissConfirmationModal = true; confirmationmodal.dismiss();closeConfrimationModal();">
+                  <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+              <ion-label class="MediumNormal" style="color: white">Confirmation</ion-label>
+              <ion-buttons slot="end">
+                <ion-button (click)="canDismissConfirmationModal = true; confirmationmodal.dismiss();closeConfrimationModal();" >
+                  <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+
+            <div class="ion-margin ion-padding" style="border: 1px solid #ffcc00; background-color: #f4f4ad;">
+              <ion-label class="MediumNormal">Are you sure you want to make payment for: {{settlementAmount | currency: 'INR'}}</ion-label>
+            </div>
+            <!-- <div *ngIf="distyconfig && distyconfig.partialpaymentremark" class="ion-margin-top ion-margin-horizontal">
+            <ion-input class="chequeinputbox MediumNormal ion-padding-horizontal" [(ngModel)]="remarks" type="text" placeholder="Enter Remark"></ion-input>
+          </div> -->
+          </ion-content>
+
+          <ion-footer class="partialpayment-modal-footer">
+            <ion-toolbar style="border: none; --box-shadow: none">
+              <ion-row class="ion-justify-content-center">
+                <ion-button style="width: 60%" (click)="confirmPayment();canDismissConfirmationModal=true;confirmationmodal.dismiss();closeConfrimationModal();" shape="round" class="text MediumNormal texttransform" expand="block">Confirm</ion-button>
+              </ion-row>
+            </ion-toolbar>
+          </ion-footer>
+
+        </ng-template>
+      </ion-modal>
+
+    </ion-content>
+
+    <ion-footer>
+      <ion-toolbar class="ion-padding-horizontal" style="border:0px; --box-shadow: none">
+        <ion-button [disabled]="!selectedPaymentMode || (selectedPaymentMode === 'Cheque' && !chqDate || selectedPaymentMode === 'Cheque' && (distyconfig?.banknameinstaffapp && !selectedBank) || selectedPaymentMode === 'Cheque' && !chequeNo || (selectedPaymentMode === 'Cheque' && chequeNo && chequeNo.length !== 6)) || (selectedPaymentMode === 'NEFT' && !utrRef || selectedPaymentMode === 'NEFT' && utrRef && utrRef.length !== 3)" (click)="proceedToPay()" expand="block" class="MediumSemibold texttransform">Submit</ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>

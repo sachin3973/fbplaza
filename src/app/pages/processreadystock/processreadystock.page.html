@@ -1,0 +1,170 @@
+<ion-header *ngIf="pageTitle === 'Cheque Details'">
+  <app-header goBackToReadyStockEntry="true" class="LargeNormal" title="{{pageTitle}}"></app-header>
+</ion-header>
+
+<ion-content>
+  
+  <!-- Qr Details-->
+  <div *ngIf="pageTitle !== 'Cheque Details'" style="position: absolute; left: 0.5rem; top: 0.3rem">
+    <!-- <img src="../../../assets/Resources/Logo/pi-small logo 1 1.png" alt="logo" /> -->
+    <ion-back-button style="color: white" mode="md" defaultHref="/readystockentry"></ion-back-button>
+  </div>
+  <div class="invoice-detail-header ion-padding-vertical">
+    <div class="invoice-details-container ion-margin-top">
+      <ion-row class="retailer-block ion-margin-bottom ion-padding ion-justify-content-center">
+        <ion-label color="light" class="LargeBold">{{initialgenerator}}</ion-label>
+      </ion-row>
+      <div>
+        <ion-label color="light" class="LargeSemibold">{{distributorName}}</ion-label>
+        <br>
+        <ion-row class="ion-justify-content-center">
+          <ion-label color="light" class="MediumNormal">Distributor</ion-label>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="processedInvoice?.paymentmode === 'UPI'">
+    <ion-row class="ion-justify-content-around ion-align-items-center" >
+      <div class="qrcode-wrapper">
+        <ngx-qrcode
+          [elementType]="elementType"
+          [errorCorrectionLevel]="correctionLevel"
+          [value]="qrvalue"
+          cssClass="qrcodeshadow"
+          [width]="180"
+        >
+        </ngx-qrcode>
+      </div>
+      <div class="invoice-details">
+        <ion-row class="ion-align-items-center">
+          <ion-label color="dark" class="MediumSemibold">Pay via </ion-label>
+          <img src="../../../assets/Resources/Icons/upiicon.png" alt="UPI">
+        </ion-row>
+        <br>
+        <ion-label color="primary" class="SmallNormal">Invoice Number</ion-label>
+        <br>
+        <ion-label color="primary" class="SmallBold">#{{invoicenumber}}</ion-label>
+        <br>
+        <br>
+        <ion-label color="dark" class="SmallNormal">Invoice Date</ion-label>
+        <br>
+        <ion-label color="dark" class="SmallBold">{{invoicedate}}</ion-label>
+      </div>
+    </ion-row>
+    <ion-row class="ion-margin-top ion-justify-content-center">
+      <div class="amount-wrapper">
+        <ion-label color="primary" style="font-size: 2rem; font-weight: 700;" class="MediumNormal">{{processedInvoice.paidamount | currency: 'INR'}}</ion-label>    
+      </div>
+    </ion-row>
+
+    <ion-row class="upi-providers-wrapper ion-justify-content-center">
+      <div class="upi-providers-wrapper">
+        <img src="../../../assets/Resources/other/upi-providers.png" alt="UPI Providers">
+      </div>
+    </ion-row>
+  </div>
+
+  <!-- Cheque Details-->
+
+  <div *ngIf="processedInvoice?.paymentmode === 'Cheque'" class="ion-padding-horizontal">
+          
+      <div id="bank-name" *ngIf="distyconfig.banknameinstaffapp">           
+         <ion-row  (click)="openbankModal()">
+           <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="selectedBank" type="text" placeholder="Enter Bank Name"></ion-input>                
+         </ion-row>             
+       </div>
+
+      <ion-row>
+        <ion-input autofocus="true" class="ion-padding ion-margin-top chequeinputbox MediumNormal" [(ngModel)]="chequeno" type="text" placeholder="Enter Cheque Number"></ion-input>
+      </ion-row>
+
+     <ion-row class="ion-justify-content-between ion-align-items-center chequeinputbox ion-margin-top">
+       
+       <ion-input type="date" class="ion-padding MediumNormal" [(ngModel)]="chqDate" ></ion-input>
+       <ion-icon (click)="decreaseChequeDate()" size="large" style="color: var(--ion-color-primary);" name="remove-circle-outline"></ion-icon>
+       <ion-icon (click)="inncreaseChequeDate()"  size="large" style="color: var(--ion-color-primary);" name="add-circle-outline"></ion-icon>
+     </ion-row>
+
+  </div>
+ 
+ <!-- QR Ref Modal -->
+  <ion-modal #markpaidmodal class="refmodal" [isOpen]="showRefModal" (didDismiss)="showRefModal=false" style="--height: 50%; --width: 95%" handleBehavior="cycle">
+    <ng-template>
+
+      <ion-header >
+        <ion-toolbar class="ion-text-center" color="primary" style="border: none !important">
+          <ion-buttons slot="start">
+            <ion-button (click)="canRefDismiss=true; markpaidmodal.dismiss(); closeRefModal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal" style="color: white">Transaction Reference</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canRefDismiss=true; markpaidmodal.dismiss(); closeRefModal();" >
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal refmodal-item" style="border-radius:20px !important ;">
+          <ion-label class="MediumNormal ion-margin-start">Enter Last 3 Digits of Transaction Ref</ion-label>
+          <div class="wid100">
+            <ion-input #txnref [(ngModel)]="transactionRef"  class="ion-padding ion-margin refinputbox" type="text" placeholder="Enter 3 digits"></ion-input>                
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="ref-modal-footer">
+        <ion-toolbar style="border: none; box-shadow: none; padding: 4px;">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button [disabled]= "!transactionRef" (click)="confirmRef(); markpaidmodal.dismiss();" expand="block" shape="round" class="MediumSemibold texttransform">Submit</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-template>
+  </ion-modal>
+
+  <!-- Bank Modal -->
+  <ion-modal #bankmodal [isOpen]="showbankmodal" (didDismiss)="showbankmodal = false" >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary" style="border: none !important">
+          <ion-title slot="start" class="Mediumbold">Bank List </ion-title>
+          <ion-buttons slot="end"> <ion-button (click)="canDismissbankModal = true;bankmodal.dismiss();closebankModal();"> <ion-icon slot="icon-only" name="close"></ion-icon> </ion-button> </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-searchbar class="MediumNormal crudsearchbar" [(ngModel)]="strsearch" ></ion-searchbar>
+        <ion-item lines="none" *ngFor="let bank of bankList | filter:strsearch" (click)="confirmBank(bank)" class="MediumNormal inputtxt-color ion-activatable" style="overflow: hidden; position: relative;">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <div>
+            <ion-label color="dark">{{bank.name}}</ion-label>
+          </div>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+
+</ion-content>
+
+<ion-footer *ngIf="processedInvoice?.paymentmode === 'UPI'">
+  <ion-toolbar style="padding: 4px;">
+    <ion-row class="wid100 ion-justify-content-around" *ngIf="!isLiveUpi">
+      <ion-button (click)="upiMarkPaid()" expand="full" shape="round" class="MediumSemibold texttransform">Mark Paid</ion-button>
+    </ion-row>
+    <!--<ion-row class="wid100 ion-justify-content-around" *ngIf="isLiveUpi">
+      <ion-button (click)="monitorUPI()" expand="full" shape="round" class="MediumSemibold texttransform">Check Status</ion-button>
+    </ion-row>-->
+  </ion-toolbar> 
+</ion-footer>
+<ion-footer *ngIf="processedInvoice?.paymentmode === 'Cheque'">
+  <ion-toolbar style="border: none; --box-shadow: none;padding: 4px;">
+    <ion-row class="ion-justify-content-center">
+      <ion-button style="width: 60%" [disabled]="chequeno?.length !== 6 || !chqDate" (click)="confirmChequePayment()" shape="round" class="text MediumNormal texttransform" expand="block">Collect Payment</ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,186 @@
+<ion-header>
+  <app-header title="Vehicle Reco Summary"></app-header>
+</ion-header>
+
+<ion-content>
+
+    <div class="ion-margin-top">
+      <div style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+        <ion-text class="SmallNormal labelcolor">Delivery Date</ion-text>
+      </div>
+      <div style="margin-inline: 1.5rem;">
+        <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="deliveryDate" ></ion-input>
+      </div>
+    </div>
+
+    <div class="method-selection ion-margin-horizontal" *ngIf="deliveryDate">
+      <ion-row (click)="showVehicleOnClick()" class="ion-justify-content-between ion-align-items-center">
+        <ion-label *ngIf="!selectedVehicle" color="dark">Select Vehicle</ion-label>
+        <ion-label *ngIf="selectedVehicle" color="dark">{{selectedVehicle.name}}</ion-label>
+        <div *ngIf="!showVehicle" class="select-icon-wrapper align-items-center">
+          <ion-icon name="caret-down-outline"></ion-icon>
+        </div>
+        <div *ngIf="showVehicle" class="select-icon-wrapper align-items-center">
+          <ion-icon name="caret-up-outline"></ion-icon>
+        </div>
+      </ion-row>
+      <ion-row *ngIf="showVehicle" class="route-option" >
+        <ion-col (click)="onSelectVehcile(vehicle)" *ngFor="let vehicle of vehiclelist" size="12" class="ion-activatable" style="overflow: hidden; position: relative; border-bottom: 1px solid #d6d6d6">
+          <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+          <ion-label color="dark">{{vehicle.name}}</ion-label>
+        </ion-col>
+      </ion-row>
+    </div>
+
+   <ion-row class="ion-align-items-center ion-justify-content-center ion-margin-top">
+    <ion-col size="6" class="ion-align-items-center ion-justify-content-center">
+      <ion-button [disabled] ="!selectedVehicle" class="SmallNormal" (click)="fetchInvoices()" expand="block" color="primary" shape="round">
+       Get Report
+      </ion-button>
+    </ion-col>
+  </ion-row> 
+
+  <div class="ion-text-center MediumNormal labelcolor ion-margin-top" *ngIf="vehileSummaryList?.length">
+    <ion-label class="MediumSemibold">Invoice Status Summary</ion-label>
+  </div>
+
+  <div *ngIf="lengthOfInvoices > 0">
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style=" background-color: #3F51B5; color: white;">
+         <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+           <ion-label>Total Invoices</ion-label>
+           <span> {{record.summaryval1}}</span>
+        </div>
+        <div class="flexRowbetween ion-padding-horizontal">
+           <ion-label>Total Amount</ion-label>
+           <span> {{record.summaryval2 | currency: "INR"}}</span>
+        </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #4AC7FF; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Delivery Pending</ion-label>
+          <span> {{record.summaryval3}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval4 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #3F51B5; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Delivered</ion-label>
+          <span> {{record.summaryval1 - record.summaryval3 - record.summaryval5}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval2 - record.summaryval4 - record.summaryval6 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #22C55E; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Cash</ion-label>
+          <span> {{record.summaryval7}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval8 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #FFAC30; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Cheque</ion-label>
+          <span> {{record.summaryval9}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval10 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #FFAC30; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>UPI</ion-label>
+          <span> {{record.summaryval11}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval12 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #FFAC30; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>NEFT</ion-label>
+          <span> {{record.summaryval13}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval14 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #F08080; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Credit Bills</ion-label>
+          <span> {{record.summaryval19}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval20 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #FFA375; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Partially Pending</ion-label>
+          <span> {{record.summaryval21}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval22 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #D32F2F; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Cancelled</ion-label>
+          <span> {{record.summaryval5}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval6 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+      <div class="flexColstart ion-margin ion-padding SmallNormal reportcard" style="background-color: #85B15E; color: white">
+        <div class="flexRowbetween paddingbtm10 ion-padding-horizontal">
+          <ion-label>Credit Note</ion-label>
+          <span> {{record.summaryval15}}</span>
+       </div>
+       <div class="flexRowbetween ion-padding-horizontal">
+          <ion-label>Amount</ion-label>
+          <span> {{record.summaryval16 | currency: "INR"}}</span>
+       </div>
+      </div>
+
+
+  </div>
+
+
+
+  <ion-row class="not-found-image-wrapper ion-justify-content-center ion-padding" *ngIf="lengthOfInvoices === 0">
+    <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-col size="12">
+      <ion-row class="ion-justify-content-center"> 
+        <ion-label style="text-align: center">No Record Found</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  
+
+
+</ion-content>

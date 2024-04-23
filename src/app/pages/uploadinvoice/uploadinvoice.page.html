@@ -1,0 +1,90 @@
+<ion-header>
+  <app-header title="Upload Signed Invoice"></app-header>
+</ion-header>
+<ion-content class="contentbg">
+  <ion-row style="padding: 0px 8px;">
+    <ion-col>
+      <ion-row class="ion-text-center" style="margin: 8px;">
+        <ion-label color="dark" class="MediumNormal">Upload Signed Invoice</ion-label>
+      </ion-row>
+      <ion-row (click)="takePicture()" class="upload-container ion-align-items-center ion-justify-content-center">
+        <img class="icon" *ngIf="!imageurl" src="../../../assets/Resources/Icons/Dslr-Camera-icon.png" alt="">
+        <img class="invoice" *ngIf="imageurl" [src]="imageurl" alt="">
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  
+  <ion-modal #otpmodal class="otp-modal " [isOpen]="showmodal" (didDismiss)="showmodal = false"  style="--height: 50%; --width: 95%"  handleBehavior="cycle" >
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="ion-text-center whitebg">
+          <ion-buttons slot="start">
+            <ion-button (click)="canDismiss = true;otpmodal.dismiss();closemodal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="MediumNormal">Enter OTP</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="canDismiss = true;otpmodal.dismiss();closemodal();" >
+              <ion-icon slot="icon-only" style="color:var(--ion-darkgrey-color)" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>              
+        <div class="otp-inner-wrapper">
+          <ion-label *ngIf="!creditenabled" class="MediumNormal ion-text-center">OTP has been sent to Admin On {{this.adminno}}</ion-label>
+          <ion-label *ngIf="creditenabled" class="MediumNormal ion-text-center">OTP has been sent to Retailer</ion-label>
+          <ion-row class="ion-margin-start">
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true" #otp1 [(ngModel)]="otpstr1" (keyup)="getotp($event,otp2)">
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true"  #otp2 [(ngModel)]="otpstr2" (keyup)="getotp($event, otp3)" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp3 [(ngModel)]="otpstr3" (keyup)="getotp($event, otp4)" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp4 [(ngModel)]="otpstr4" (keyup)="getotp($event,null)">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+          <!-- <ion-label *ngIf ="!resend"  class="SmallNormal ion-text-center" style="margin: 5px;">Didn't receive OTP? Retry in <span style="color:var(--ion-color-primary)" >00 : {{counter.sec}} </span> </ion-label>
+          <ion-label *ngIf ="resend" class="SmallNormal ion-text-center" style="margin: 5px;"> Click to <span style="color:var(--ion-color-primary)" >Resend </span> </ion-label>
+                    -->
+          <!-- <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-col size="6">
+              <ion-button (click)="verifyOtp()" class="texttransform SmallNormal" expand="block" shape="round">Verify</ion-button>
+        
+            </ion-col>
+          </ion-row> -->
+          </div>
+      </ion-content>
+      <ion-footer class="otp-modal-footer">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-center">
+            <ion-button style="width: 60%" (click)="verifyOtp()" class="texttransform MediumSemibold" expand="block" shape="round">Verify</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+<ion-footer class="ion-justify-content-center ion-padding">
+  <ion-toolbar class="ion-padding-horizontal" style="border:0px  ; --background: white;">
+    <ion-button *ngIf="paymentmode === 'Cash' || paymentmode === 'Cheque' " (click)="processCollection()" [disabled]="!isImageUpload" expand="block" shape="round" class="MediumSemibold texttransform">Upload</ion-button>
+    <ion-button *ngIf="paymentmode === 'Credit Note'" (click)="processCollection()" [disabled]="!isImageUpload" expand="block" shape="round" class="MediumSemibold texttransform">Upload</ion-button>
+    <ion-button *ngIf="paymentmode === 'Delivery Without Payment' && otpfordwp" (click)="openModal()" [disabled]="!isImageUpload" expand="block" shape="round" class="MediumSemibold texttransform">Send OTP</ion-button>
+    <ion-button *ngIf="paymentmode === 'Delivery Without Payment' && !otpfordwp" (click)="submitDelivery()" [disabled]="!isImageUpload && !optionalinvoiceupload " expand="block" shape="round" class="MediumSemibold texttransform">Submit</ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+

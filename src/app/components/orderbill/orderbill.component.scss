@@ -1,0 +1,101 @@
+ion-col {
+  padding: 0px;
+}
+
+.tableheaderbill {
+  th {
+    text-align: center;
+    background-color: #e0e0e1;
+    color: rgba(0, 0, 0, 0.87);
+    border: 1px solid #c5c5c5;
+    font-weight: bold;
+  }
+  th:hover {
+    background-color: #e0e0e1;
+  }
+}
+
+.invoice-container {
+  span {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.tablebody {
+  td {
+    text-align: center;
+    border: 1px solid #c5c5c5;
+    padding: 5px;
+  }
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+.justify-content-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.col-1 {
+  flex: 0 0 8.33%;
+  max-width: 8.33%;
+}
+
+.col-11 {
+  flex: 0 0 91.67%;
+  max-width: 91.67%;
+}
+
+.tax-table {
+  th {
+    border-bottom: 2px solid black;
+  }
+}
+
+.justify-content-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.col-7 {
+  flex: 0 0 58.33%;
+  max-width: 58.33%;
+}
+
+.col-4 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.col-5 {
+  flex: 0 0 41.67%;
+  max-width: 41.67%;
+}

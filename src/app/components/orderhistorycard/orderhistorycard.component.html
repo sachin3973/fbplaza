@@ -1,0 +1,31 @@
+<div class="summary-card-container" *ngFor="let record of records">
+  
+  <div *ngIf="record.orderstatus === 'Cancelled'" class="cancelled-label ion-text-center">
+    <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+  </div>
+  <div *ngIf="record.orderstatus === 'Confirmed'" class="completed-label ion-text-center">
+    <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+  </div>
+  <div *ngIf="record.orderstatus === 'Placed'" class="placed-label ion-text-center">
+    <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+  </div>
+  <div *ngIf="record.orderstatus === 'Delivered'" class="delivered-status-label ion-text-center">
+    <span class="VSmallBold" style="margin: 0 auto;">{{record.orderstatus}}</span>
+  </div>
+  <ion-row>    
+    <ion-col>
+      <ion-row class="ion-justify-content-between ion-align-items-center wid100" style="margin-bottom: 0.3rem;">
+        <ion-label color="dark" class="VSmallNormal">Order ID: <b>#{{record.id}}</b></ion-label>
+        <ion-label color="dark" class="VSmallNormal">{{record.createdat | date: "dd/MM/yy HH:mm"}}</ion-label>
+      </ion-row>
+      <ion-row class="ion-justify-content-between ion-align-items-center wid100" style="border-bottom: 1px solid #cbcbcb; padding-bottom: 0.5rem">
+        <ion-label color="primary" class="SmallBold">{{record.distributorname}}</ion-label>
+        <ion-label color="primary" class="LargeBold">{{record.cart.payableamount | currency: 'INR'}}</ion-label>
+      </ion-row>
+      <ion-row class="ion-align-items-center wid100" style="margin-top: 0.3rem">
+        <ion-label color="dark" class="SmallNormal">Order Details:</ion-label>
+        <ion-label color="dark" class="SmallBold">{{getCartItems(record)}}</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</div>

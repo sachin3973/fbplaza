@@ -1,0 +1,52 @@
+<!-- <ion-header>
+  <ion-toolbar lines="none" class="header">  
+    <div class="flexcenter"> <ion-label class="toolBarTitle">Pipay Payment</ion-label>  </div>   
+  </ion-toolbar>
+</ion-header> -->
+<ion-content>
+
+<div>
+
+  <ion-row class="ion-justify-content-center ion-padding">
+    <div class="ion-padding" style="border-radius: 50%;">
+      <img *ngIf="!paymentProcessed" style="height: 5.5rem;" src="../../../assets/Resources/other/payment-3.jpeg" alt="">
+      <img *ngIf="paymentProcessed" style="height: 5.5rem;" src="../../../assets/Resources/other/payment-2.jpeg" alt="">
+    </div>
+  </ion-row>
+  <div class="ion-text-center">
+    <ion-label *ngIf="!paymentProcessed" color="primary" class="LargeBold">Payment Requested!</ion-label>
+    <ion-label *ngIf="paymentProcessed" color="primary" class="LargeBold">Payment Processed!</ion-label>
+  </div>
+  <ion-row class="ion-align-items-center ion-justify-content-center ion-margin-vertical" style="height: 40vh; background-color: #e6e7f2;">
+    <ion-col size="12" class="ion-text-center"> 
+      <ion-label *ngIf="!paymentProcessed" color="dark" class="Mediumbold">Opening Payment Link...</ion-label>
+      <ion-row *ngIf="paymentProcessed" class="ion-justify-content-center">
+        <!--<ion-col size="12">
+          <ion-icon color="success" style="font-size: 2.5rem" name="checkmark-circle"></ion-icon>
+        </ion-col>-->
+        <ion-col size="12">
+          <ion-label color="dark" class="Mediumbold">Payment link opened..</ion-label>
+        </ion-col>
+      </ion-row>
+
+    </ion-col>
+  </ion-row>
+ 
+  
+  <ion-row class="ion-align-items-end ion-justify-content-center ion-padding-top">
+    <ion-col size="6"><ion-button color="accent5" (click)="checkStatus()" class="MediumNormal texttransform" expand="block">Check Status</ion-button></ion-col>
+    <ion-col size="6">
+      <ion-button (click)="goToInvoicePage()" color="accent5" class="MediumNormal texttransform" expand="block">Back To Invoice</ion-button>
+    </ion-col>
+  </ion-row>
+</div>
+
+</ion-content>
+<!-- <ion-footer>
+  <ion-toolbar>
+   <ion-row>
+    <ion-col size="6"><ion-button color="accent5" class="MediumNormal texttransform" expand="block">Send Link</ion-button></ion-col>
+    <ion-col size="6"><ion-button color="accent5" class="MediumNormal texttransform" expand="block">Check Status</ion-button></ion-col>
+   </ion-row>
+  </ion-toolbar>
+</ion-footer> -->

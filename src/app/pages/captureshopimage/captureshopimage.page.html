@@ -1,0 +1,144 @@
+<ion-header>
+  <div *ngIf="!showfssaimodal">
+    <div *ngIf="!cameFromPartywise">
+      <app-header goBackToInvoices="true" title="Upload Shop Image"></app-header>
+    </div>
+    <div *ngIf="cameFromPartywise">
+      <ion-item lines="none" class="itemrow header">
+        <ion-row class="ion-align-items-center">
+          <ion-col size="2">
+            <ion-back-button mode="md" (click)="goToPartywise()">
+              <ion-icon name="close"></ion-icon>
+            </ion-back-button>
+          </ion-col>  
+          <ion-col size="10"><ion-label class="toolBarTitle ion-margin-start">Upload Shop Image</ion-label></ion-col>  
+        </ion-row>
+      </ion-item>
+    </div>
+    <div (click)="onSkipImage()" class="skipbtn">
+      <ion-label color="primary" class="MediumSemibold">Skip</ion-label>
+    </div>
+  </div>
+
+  <div *ngIf="showfssaimodal">
+    <app-header goBackToInvoices="true" title="FSSAI Details"></app-header>
+    <div (click)="onSkipFssai()" class="skipbtn">
+      <ion-label color="primary" class="MediumSemibold">Skip</ion-label>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+
+  <ion-row *ngIf="!showfssaimodal" style="padding: 0px 8px;">
+    <ion-col>
+      <ion-row (click)="takePicture()" class="upload-container ion-align-items-center ion-justify-content-center">
+        <img class="icon" *ngIf="!imageurl" src="../../../assets/Resources/Icons/Dslr-Camera-icon.png" alt="">
+        <img class="invoice" *ngIf="imageurl" [src]="imageurl" alt="">
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <div *ngIf="showfssaimodal" class="fssai-registration-wrapper ion-margin-top">
+    <!--<ion-label color="dark" class="SmallSemibold ion-margin-start">FSSAI Registration<font color="red"> *</font></ion-label>
+    <div class="ion-margin-vertical">
+      <ion-radio-group [(ngModel)]="distyretailer.fssaiavailable" mode="md" (ionChange)="changeFssaiAvailable($event)">
+        <ion-row class="ion-align-items-center ion-margin-start">
+          <div class="ion-margin-end" style="display: flex">
+            <ion-radio slot="start" value="Yes" class="ion-margin-end"></ion-radio>
+            <ion-label color="dark" class="SmallNormal">Yes</ion-label>
+          </div>
+          <div style="display: flex">
+            <ion-radio slot="start" value="No" class="ion-margin-end"></ion-radio>
+            <ion-label color="dark" class="SmallNormal">No</ion-label>
+          </div>
+        </ion-row>
+      </ion-radio-group>          
+    </div>
+
+    <div class="ion-margin-top" *ngIf="distyretailer.fssaiavailable === 'Yes'">
+      <ion-label color="dark" class="SmallSemibold ion-margin-start">FSSAI No<font color="red"> *</font></ion-label>
+      <ion-row class="ion-align-items-center ion-justify-content-between">
+        <div style="width: 95%;" class="inputbox" >
+          <ion-input class="SmallNormal ion-no-padding" [(ngModel)]="distyretailer.fssaino" placeholder="Enter FSSAI No"></ion-input>
+        </div>
+      </ion-row>
+    </div>
+
+    <div *ngIf="distyretailer.fssaiavailable === 'Yes'">
+      <div class="ion-margin-top">
+        <ion-label color="dark" class="SmallSemibold blackfont ion-margin-start ">FSSAI Expiry Date<font color="red"> *</font></ion-label>
+      </div>
+      <div class="inputbox">
+        <ion-input type="date" class="SmallNormal blackfont ion-no-padding" [(ngModel)]="distyretailer.fssaiexp" ></ion-input>            
+      </div>
+    </div>-->
+
+    <div>
+      <ion-label color="dark" class="SmallSemibold blackfont ion-margin-start">Registered Mobile Number<font color="red"> *</font></ion-label>
+      <ion-row class="ion-align-items-center ion-justify-content-between ion-margin-end">
+        <div class="inputbox" style="width: 65%">
+          <ion-input class="SmallNormal blackfont ion-no-padding" [(ngModel)]="distyretailer.mobileno" placeholder="Enter 10 digit mobile number"></ion-input >
+        </div>
+        <ion-button style="height: 2.1rem" fill="outline" *ngIf="!verifiedmobile" (click)="verifyMobileNo()" [disabled]="!distyretailer.mobileno" color="primary" size="small" shape="round" class="texttransform">Verify</ion-button>
+        <img *ngIf="verifiedmobile" style="height: 4vh;" src="../../../assets/Resources/Icons/mdi_check-circle green.png" alt="">
+      </ion-row>
+    </div>
+
+  </div>
+
+  <ion-modal #otpmodal class="otp-modal " [isOpen]="showmodal" (didDismiss)="showmodal = false"  [initialBreakpoint]="0.35"  handleBehavior="cycle" >
+    <ng-template>
+     
+      <ion-content>              
+        <div class="otp-inner-wrapper">
+          <ion-label color="dark" class="MediumNormal ion-text-center">OTP has been send to +91  {{maskify(distyretailer.mobileno)}}</ion-label>
+          <ion-row class="ion-margin-start">
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" (keyup)="getotp($event,otp2)" required  maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true" #otp1 [(ngModel)]="otpstr1">
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" (keyup)="getotp($event,otp3)" required maxlength="1" type="tel" inputmode="numeric"
+              autofocus="true"  #otp2 [(ngModel)]="otpstr2" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" (keyup)="getotp($event,otp4)"  required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp3 [(ngModel)]="otpstr3" >
+              </ion-input>
+            </ion-col>
+            <ion-col size="3">
+              <ion-input class="otp LargeSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+                autofocus="true" #otp4 [(ngModel)]="otpstr4" >
+              </ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-label *ngIf ="!resend"  class="SmallNormal ion-text-center" style="margin: 5px;">Didn't receive OTP? Retry in <span style="color:var(--ion-color-primary)" >00 : {{counter.sec}} </span> </ion-label>
+          <ion-label *ngIf ="resend" class="SmallNormal ion-text-center" style="margin: 5px;"> Click to <span style="color:var(--ion-color-primary)" >Resend </span> </ion-label>
+                   
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-col size="6">
+              <ion-button (click)="verifyOtp()" class="texttransform SmallNormal" expand="block" shape="round">Verify</ion-button>
+        
+            </ion-col>
+          </ion-row>
+          </div>
+      </ion-content>
+      
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<ion-footer *ngIf="!showfssaimodal" class="footer-of-modal">
+  <ion-toolbar class="ion-padding-horizontal" style="border:0px; --box-shadow: none">
+    <ion-button (click)="submitImage()" [disabled]="!isImageUpload && !enableimagebutton" expand="block" shape="round" class="MediumSemibold texttransform">Submit</ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="showfssaimodal" class="footer-of-modal">
+  <ion-toolbar class="ion-padding-horizontal" style="border: none; --box-shadow: none">
+    <ion-button [disabled] = "!verifiedmobile" (click)="closeFssaiModal();" expand="block" shape="round" class="MediumSemibold texttransform">Submit</ion-button>
+  </ion-toolbar>
+</ion-footer>

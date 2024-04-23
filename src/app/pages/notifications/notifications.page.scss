@@ -1,0 +1,32 @@
+.notification-detail {
+  color: var(--ion-darkgrey-color);
+}
+
+.notification-container {
+  border-bottom: 1px solid var(--ion-lightgrey-color);
+}
+
+.notification-detail ion-label {
+  width: 90%;
+}
+
+.notification-detail ion-icon {
+  margin-left: auto;
+}
+
+.notification-container-new {
+  background-color: var(--ion-lightgrey-color);
+}
+
+.dot-icon {
+  font-size: 0.5rem;
+  margin-left: -1rem;
+  margin-right: 0.3rem;
+  margin-bottom: 1px; 
+  color: var(--ion-color-primary);
+}
+
+.view-more-label {
+  text-decoration: underline;
+  margin-top: 1rem;
+}

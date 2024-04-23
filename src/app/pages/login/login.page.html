@@ -1,0 +1,111 @@
+<ion-header class="header">
+  <ion-row class="ion-justify-content-between align-items-center">
+    <div class="fb-logo">
+      <img src="../../../assets/Resources/Logo/fb.png" alt="logo" />
+    </div>
+    <div class="logo">
+      <img src="../../../assets/Resources/Logo/pi-small logo 1 1.png" alt="logo" />
+    </div>
+  </ion-row>
+</ion-header>
+
+<ion-content>
+  <div class="auth-image-container">
+    <div class="gradient-overlay"></div>
+  </div>
+  <div class="auth-container">
+    <ion-label *ngIf="!showotp" class="LargeNormal">Login</ion-label>
+    <ion-label *ngIf="showotp" class="LargeNormal">OTP</ion-label>
+    <div class="auth-inner-wrapper" *ngIf="!showotp">
+      <ion-label class="SmallNormal">Enter your mobile number</ion-label>
+      <ion-input class="SmallNormal inputno" #mobno autofocus="true" style="max-height: 6vh;" [(ngModel)]="usermobileno" ></ion-input>
+      <ion-button (click)="sendotp()" class="texttransform Mediumbold" style="height: 40px;"  expand="block" shape="round">Send OTP</ion-button>
+      <div class="ion-text-center">
+        <ion-label color="primary" class="SmallBold">Version {{appVersion}}</ion-label>
+      </div>
+    </div>
+
+    <div class="auth-inner-wrapper ion-justify-content-center ion-align-items-center" *ngIf="showotp">
+      <ion-label class="SmallNormal">OTP has been sent</ion-label>
+      <ion-row class="SmallNormal ">
+        <ion-col size="3" style="padding: 8px;">
+          <ion-input class="otp SmallSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+            autofocus="true" #otp1 [(ngModel)]="otpstr1" (keyup)="getotp($event,otp2)">
+          </ion-input>
+        </ion-col>
+        <ion-col size="3" style="padding: 8px;">
+          <ion-input class="otp SmallSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+            autofocus="true" #otp2 [(ngModel)]="otpstr2" (keyup)="getotp($event, otp3)" >
+          </ion-input>
+        </ion-col>
+        <ion-col size="3"  style="padding: 8px;">
+          <ion-input class="otp SmallSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+            autofocus="true" #otp3 [(ngModel)]="otpstr3" (keyup)="getotp($event, otp4)" >
+          </ion-input>
+        </ion-col>
+        <ion-col size="3" style="padding: 8px;">
+          <ion-input class="otp SmallSemibold ion-text-center" required maxlength="1" type="tel" inputmode="numeric"
+            autofocus="true" #otp4 [(ngModel)]="otpstr4" (keyup)="getotp($event,null)">
+          </ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-button (click)="verifyOtp()" class="texttransform Mediumbold" style="height: 40px;"  expand="block" shape="round">Verify</ion-button>
+    </div>
+    <img class="bottom-image" src="../../../assets/Resources/Logo/pie pay square logo 2.png" alt="footerlogo" />
+  </div>
+
+  <!-- Vehicle Selection dialgue -->
+
+  <ion-modal #vehicleModal class="vehicleModal" [isOpen]="showVehicleModal" (didDismiss)="showVehicleModal = false" style="--height: 60%; --width: 95%" handleBehavior="cycle" >
+    <ng-template>
+
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="ion-text-center whitebg">
+          <!-- <ion-buttons slot="start">
+            <ion-button (click)="canDismissVehicleModal=true; vehicleModal.dismiss(); closeVehiclemodal();">
+              <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons> -->
+          <ion-label class="MediumNormal">Select Vehicle</ion-label>
+          <!-- <ion-buttons slot="end">
+            <ion-button (click)="canDismissVehicleModal = true; vehicleModal.dismiss(); closeVehiclemodal();" >
+              <ion-icon slot="icon-only" style="color:var(--ion-darkgrey-color)" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons> -->
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="divflexCol ion-margin-top ion-margin-horizontal vehicleModal-item" style="border-radius:20px !important ;">
+          <div class="method-selection" style="position: relative"> 
+            <ion-row (click)="showVehiclesOnClick()" style="background-color: var(--ion-lightestgrey-color);">
+              <!-- <ion-ripple-effect type="unbounded"></ion-ripple-effect> -->
+              <ion-label class="MediumNormal">{{selectedVehicle ? selectedVehicle.name + ' ' + selectedVehicle.vehiclenumber: 'Select Vehicle'}}</ion-label>
+              <div style="position:absolute; right: 0.8rem; top: 0.6rem" class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-down-outline"></ion-icon>
+              </div>
+              <div style="position:absolute; right: 0.8rem; top: 0.6rem"  class="select-icon-wrapper align-items-center">
+                <ion-icon name="caret-up-outline"></ion-icon>
+              </div>
+            </ion-row>
+            <ion-row *ngIf="showVehicles" class="vehicle-option" >
+              <ion-col (click)="selectVehicle(vehicle)" *ngFor="let vehicle of vehicles" size="12" class="ion-padding-vertical ion-activatable" style="overflow: hidden; position: relative;">
+                <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+                <ion-label>{{vehicle.name}} - {{vehicle.vehiclenumber}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </ion-content>
+
+      <ion-footer class="footer-of-modal">
+        <ion-toolbar style="border: none; --box-shadow: none">
+          <ion-row class="wid100 ion-justify-content-around">
+            <ion-button [disabled] = "!selectedVehicle" (click)="onSelectVehicle(); vehicleModal.dismiss(); closeVehiclemodal();" expand="block" shape="round" class="MediumSemibold texttransform vehicle-modal-button">Submit</ion-button>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+  
+</ion-content>

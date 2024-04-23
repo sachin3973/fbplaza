@@ -1,0 +1,90 @@
+<ion-header>
+  <app-header title="Staff Collection Summary"></app-header>
+</ion-header>
+
+<ion-content color="light">
+  <div class="ion-margin-top">
+    <div style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+      <ion-text class="SmallNormal labelcolor">Delivery Date</ion-text>
+    </div>
+    <div style="margin-inline: 1.5rem;">
+      <ion-input class="SmallNormal inputbox ion-padding-horizontal" type="date" dateFormat="dd/mm/yy" [(ngModel)]="deliveryDate" ></ion-input>
+    </div>
+  </div>
+
+  <div class="method-selection ion-margin-horizontal" *ngIf="deliveryDate">
+    <ion-row (click)="showVehicleOnClick()" class="ion-justify-content-between ion-align-items-center">
+      <ion-label *ngIf="!selectedVehicle" color="dark">Select Vehicle</ion-label>
+      <ion-label *ngIf="selectedVehicle" color="dark">{{selectedVehicle.name}}</ion-label>
+      <div *ngIf="!showVehicle" class="select-icon-wrapper align-items-center">
+        <ion-icon name="caret-down-outline"></ion-icon>
+      </div>
+      <div *ngIf="showVehicle" class="select-icon-wrapper align-items-center">
+        <ion-icon name="caret-up-outline"></ion-icon>
+      </div>
+    </ion-row>
+    <ion-row *ngIf="showVehicle" class="route-option" >
+      <ion-col  (click)="onSelectVehcile(vehicle)" *ngFor="let vehicle of vehiclelist" size="12" class="ion-activatable" style="overflow: hidden; position: relative; border-bottom: 1px solid #d6d6d6">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <ion-label color="dark">{{vehicle.name}}</ion-label>
+      </ion-col>
+    </ion-row>
+  </div>  
+
+  <div class="method-selection ion-margin-horizontal" *ngIf="deliveryDate">
+    <ion-row (click)="showPaymentModeOnClick()" class="ion-justify-content-between ion-align-items-center">
+      <ion-label *ngIf="!selectedPaymentMode" color="dark">Select Payment Mode</ion-label>
+      <ion-label *ngIf="selectedPaymentMode" color="dark">{{selectedPaymentMode.title}}</ion-label>
+      <div *ngIf="!showPaymentModes" class="select-icon-wrapper align-items-center">
+        <ion-icon name="caret-down-outline"></ion-icon>
+      </div>
+      <div *ngIf="showPaymentModes" class="select-icon-wrapper align-items-center">
+        <ion-icon name="caret-up-outline"></ion-icon>
+      </div>
+    </ion-row>
+    <ion-row *ngIf="showPaymentModes" class="route-option" >
+      <ion-col (click)="onSelectPaymentMode(paymentmode)" *ngFor="let paymentmode of paymentModeType" size="12" class="ion-activatable" style="overflow: hidden; position: relative; border-bottom: 1px solid #d6d6d6">
+        <ion-ripple-effect type="bounded" class="custom-ripple"></ion-ripple-effect>
+        <ion-label color="dark">{{paymentmode.title}}</ion-label>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-row class="ion-align-items-center ion-justify-content-center ion-margin-top">
+    <ion-col size="6" class="ion-align-items-center ion-justify-content-center">
+      <ion-button [disabled] ="!selectedVehicle || !selectedPaymentMode" class="SmallNormal" (click)="fetchPayments()" expand="block" color="primary" shape="round">View</ion-button>
+    </ion-col>
+  </ion-row> 
+
+  <div class="ion-padding" *ngIf="transcations && transcations.length > 0">
+    <div class="summary-card-container" *ngFor="let record of transcations">
+      <ion-row>
+        <ion-col>
+          <ion-row class="ion-justify-content-between ion-align-items-center wid100">
+            <ion-label color="dark" class="SmallNormal">Staff Name:</ion-label>
+            <ion-label color="dark" class="SmallBold">{{record.staffName}}</ion-label>
+          </ion-row>
+          <br>
+          <ion-row class="ion-justify-content-between ion-align-items-center wid100">
+            <ion-label color="dark" class="SmallNormal">Invoice Count:</ion-label>
+            <ion-label color="dark" class="SmallBold">{{record.count}}</ion-label>
+          </ion-row>
+          <br>
+          <ion-row class="ion-justify-content-between ion-align-items-center wid100">
+            <ion-label color="dark" class="SmallNormal">Amount:</ion-label>
+            <ion-label color="dark" class="SmallBold">{{record.amount | currency: 'INR'}}</ion-label>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+
+  <ion-row class="not-found-image-wrapper ion-justify-content-center ion-padding" *ngIf="transcations && transcations.length === 0">
+    <img src="../../../assets/Resources/other/notfound.png" alt="Not Found">
+    <ion-col size="12">
+      <ion-row class="ion-justify-content-center"> 
+        <ion-label style="text-align: center">No Record Found</ion-label>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

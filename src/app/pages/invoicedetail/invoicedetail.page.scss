@@ -1,0 +1,169 @@
+#show-direction ion-icon {
+  font-size: 48px;
+  background-color: white;
+  border-radius: 50%;
+  margin-right: auto;
+}
+
+ion-content {
+  --color: white;
+}
+
+.invoice-detail-header {
+  background-color: var(--ion-color-primary);
+  padding-top: 0.5rem;
+}
+
+.invoice-detail-status {
+  background-color: #ffffff5c;
+  margin-left: auto;
+  padding: 0.3rem;
+  border-radius: 20px;
+  align-self: center;
+}
+
+.dot-icon {
+  font-size: 0.5rem;
+  margin-right: 0.3rem;
+  margin-bottom: 1px;
+}
+
+.invoice-details-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.retailer-block {
+  margin-top: -2rem;
+  width: 60px;
+  background-color: var(--ion-color-accent1);
+  border-radius: 10px;
+}
+
+.amount-wrapper {
+  background-color: #ffffff5c;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  align-self: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+// .contact-retailer-container {
+//   z-index: 1000;
+//   margin-bottom: -25px;
+//   width: 40%;
+//   background-color: white;
+//   padding: 0.5rem;
+//   border-radius: 50px;
+// }
+
+.contact-retailer-container img {
+  height: 50px;
+}
+
+.main-content {
+  background-color: var(--ion-lightgrey-color);
+}
+
+.address-container {
+  background-color: white;
+  // margin-top: 2.3rem;
+  border-radius: 10px;
+}
+.map {
+  height: 200px;
+  width: 100%;
+  border: 1px solid var(--ion-darkgrey-color);
+}
+
+.address-block {
+  color: var(--ion-darkgrey-color);
+}
+
+.address-block img {
+  // margin-right: 0.5rem;
+}
+
+.button-block {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+}
+
+ion-button {
+  text-transform: capitalize;
+  height: 45px;
+  width: auto;
+}
+
+// .edit-button {
+//   --background: white;
+//   --color: var(--ion-color-primary);
+//   font-weight: bold;
+//   text-transform: capitalize;
+//   --border-radius: 20px;
+//   --border-color: var(--ion-color-primary);
+//   --border-style: solid;
+//   --border-width: 1px;
+//   --box-shadow: 1 1px 1px 0 rgb(0, 0, 0, 0.25);
+// }
+
+capacitor-google-maps {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+ion-modal::part(backdrop) {
+  background: rgb(55, 55, 55);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.7);
+  opacity: 1;
+}
+
+.cancellationmodal {
+  --border-radius: 16px;
+  ion-content {
+    --overflow: hidden;
+  }
+  ion-header {
+    padding: 5px;
+  }
+  ion-toolbar {
+    border-bottom: 1px solid var(--ion-darkgrey-color);
+  }
+  ion-label {
+    color: #000;
+  }
+}
+
+.cancellationmodal-item {
+  border-radius: 10px;
+  background: #fff;
+}
+
+.reasoninputbox {
+  border: dotted;
+  border-radius: 8px;
+  width: auto;
+  border: dotted;
+  border-radius: 8px;
+  width: auto;
+  color: #919299;
+}
+
+.footer-of-modal {
+  width: 100%;
+  bottom: 43%;
+}
+
+.footer-of-modal ion-button {
+  height: 5rem;
+}
+
+.divflexCol {
+  display: flex;
+  flex-direction: column;
+}

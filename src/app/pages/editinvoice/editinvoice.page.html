@@ -1,0 +1,48 @@
+<ion-header>
+  <app-header class="LargeNormal"  title="Invoice Edit Request"></app-header>
+</ion-header>
+<ion-content>
+  <ion-col>
+    <ion-row class="ion-padding issues-wrapper">
+      <ion-label class="MediumSemibold issue-heading">Please select an issue:</ion-label>
+    </ion-row>
+    <div *ngFor="let option of optionList">
+      <ion-row (click)="onOptionSelect()" class="ion-padding issues-wrapper ion-justify-content-between ion-activatable" style="overflow: hidden; position: relative;">
+        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+        <ion-label color="dark" class="MediumNormal">{{option}}</ion-label>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </ion-row>
+    </div>
+    <ion-row class="ion-padding issues-wrapper ion-justify-content-between ion-activatable" style="overflow: hidden; position: relative;" (click)="openOtherIssue()">
+      <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+      <ion-label color="dark" class="MediumNormal">Any other issue</ion-label>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </ion-row>
+    <ion-row *ngIf="showTextArea" class="ion-margin text-area-wrapper">
+      <ion-textarea placeholder="Enter details here..." rows="10" (ionInput)="onOtherIssueChange()"></ion-textarea>
+    </ion-row>
+  </ion-col>
+  <ion-modal #editinvoicemodal class="modal-wrapper" [isOpen]="showmodal" (didDismiss)="showmodal=false" [initialBreakpoint]="0.2" handleBehavior="cycle" >
+    <ng-template>
+      <ion-content>
+        <div *ngIf="editRequestSent" class="ion-padding ion-text-center">
+          <ion-label color="dark">
+            Are you sure, you want to submit the edit request?
+          </ion-label>
+          <ion-row class="ion-justify-content-around modal-button-wrapper">
+            <ion-button (click)="canDismiss = true;editinvoicemodal.dismiss();closemodal();" class="cancel-button MediumSemibold">Cancel</ion-button>
+            <ion-button (click)="presentToast();editinvoicemodal.dismiss();" shape="round" color="primary" class="MediumSemibold">Submit</ion-button>
+          </ion-row>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="submit-button ion-padding-vertical">
+      <ion-button expand="full" [disabled]="!optionSelected" shape="round" (click)="openModal()" class="MediumSemibold">Submit</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

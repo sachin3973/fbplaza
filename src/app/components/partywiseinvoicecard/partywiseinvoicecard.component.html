@@ -1,0 +1,17 @@
+<ion-row class="ion-justify-content-between ion-align-items-center card ion-margin-bottom">
+  <ion-col size="1">
+    <ion-checkbox [(ngModel)]="selected" (ionChange)="onSelect()"></ion-checkbox>
+  </ion-col>
+  <ion-col size="8">
+    <ion-col size="12">
+      <ion-label style="color: #7e7e7e" class="VSmallNormal">{{invoice.invoicedate}}</ion-label>
+      <br>
+    </ion-col>
+    <ion-col size="12" class="ion-margin-top">
+      <ion-label color="dark" class="VSmallBold">#{{invoice.invoicenumber}}</ion-label>
+    </ion-col>
+  </ion-col>
+  <ion-col size="3">
+    <ion-label color="primary" class="Mediumbold">{{(invoice.invoiceamount + (invoice.failurecharges ? invoice.failurecharges : 0)) - (invoice.paidamount ? invoice.paidamount : 0) | currency: 'INR'}}</ion-label>
+  </ion-col>
+</ion-row>

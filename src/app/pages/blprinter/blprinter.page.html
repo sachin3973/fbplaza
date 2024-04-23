@@ -1,0 +1,20 @@
+<ion-header>
+  <app-header title="Bluetooth Printer"></app-header>
+</ion-header>
+
+<ion-content>
+  <ion-list padding>
+    <ion-button expand="block" color="secondary" (click)="startScanning()" class="MediumNormal">scan</ion-button>
+  <!-- <ion-list-header class="Mediumbold"> Paired Devices  </ion-list-header>
+    <ion-item *ngFor="let device of pairedDevices" class="MediumNormal">
+      <ion-label color="dark" class="MediumNormal">  {{device.name}}</ion-label>    
+  </ion-item> -->
+    <!-- <ion-button expand="block" color="secondary">Available Devices</ion-button> -->
+    <ion-list-header class="Mediumbold"> Available Devices  </ion-list-header>
+    <ion-item *ngFor='let device of unpairedDevices'>
+      <ion-label color="dark" (click)="selectDevice(device)" class="MediumNormal">{{device.name || device.address}}</ion-label>      
+    </ion-item>
+    <ion-spinner color="primary" name="circular" *ngIf="gettingDevices"></ion-spinner>
+</ion-list>
+
+</ion-content>

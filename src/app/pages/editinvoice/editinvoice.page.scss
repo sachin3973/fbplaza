@@ -1,0 +1,69 @@
+.issue-heading {
+  color: var(--ion-color-accent2)
+}
+
+.issues-wrapper {
+  border-bottom: 1px solid var(--ion-lightgrey-color);
+}
+
+ion-icon {
+  color: var(--ion-darkgrey-color);
+}
+
+.text-area-wrapper {
+  border: 1px dotted var(--ion-darkgrey-color);
+  border-radius: 10px;
+  color: black;
+}
+
+.submit-button {
+  margin-inline: auto;
+  width: 50%;
+}
+
+.submit-button ion-button {
+  height: 45px;
+}
+
+.modal-wrapper {
+  --border-radius: 16px;  
+  ion-content{ --overflow: hidden;} 
+  ion-header{padding: 5px;} 
+  ion-toolbar{ border-bottom: 1px solid var( --ion-darkgrey-color); }
+  ion-label{color: #000;}
+}
+
+ion-modal::part(backdrop) {
+  background: rgb(55, 55, 55);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.7);
+  opacity: 1;
+}
+
+.modal-button-wrapper {
+  margin-top: 2rem;
+}
+
+.modal-button-wrapper ion-button {
+  height: 45px;
+  width: auto;
+}
+
+ion-button {
+  text-transform: capitalize;
+}
+
+.cancel-button {
+  --background: white;
+  --color: var(--ion-color-primary);
+  font-weight: bold;
+  --border-radius: 20px;
+  --border-color: var(--ion-color-primary);
+  --border-style: solid;
+  --border-width: 1px;
+  --box-shadow: 1 1px 1px 0 rgb(0, 0, 0, 0.25);
+}
+
+.toast {
+  padding: 1rem;
+  box-shadow: 3px 3px 3px 5px #eee;
+}
